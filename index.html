@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="km">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ផ្សារកសិករ</title>
+
+    <!-- Link to external styles and scripts -->
+    <link rel="stylesheet" href="./css/main.css" />
+    <script src="./js/main.js" defer></script>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  </head>
+
+  <body>
+    <header>
+      <nav
+        class="navbar navbar-expand-lg navbar-light bg-light"
+        aria-label="Main Navigation"
+      >
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">ផ្សារកសិករ</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link active" href="#" aria-current="page"
+                  >ទំព័រដើម</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">អំពីយើង</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">ទំនិញថ្មីៗ</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" id="enroll">ចុះឈ្មោះ​​</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <div class="boot-main">
+      <section class="carousel-section">
+        <div
+          id="carouselExampleCaptions"
+          class="carousel slide"
+          data-bs-ride="carousel"
+        >
+          <div class="carousel-indicators">
+            <button
+              type="button"
+              data-bs-target="#carouselExampleCaptions"
+              data-bs-slide-to="0"
+              class="active"
+              aria-current="true"
+              aria-label="Slide 1"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleCaptions"
+              data-bs-slide-to="1"
+              aria-label="Slide 2"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleCaptions"
+              data-bs-slide-to="2"
+              aria-label="Slide 3"
+            ></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img
+                src="./img/lysrov.jpg"
+                class="d-block w-100"
+                alt="Seasonal farming activities in Cambodia"
+              />
+              <div class="carousel-caption d-none d-md-block">
+                <h5>ស្រែនារដូវ វស្សា</h5>
+                <p>ប្រជាកសិករចាប់ផ្ដើមធ្វើស្រែចម្ការ និងទប់ទឹក</p>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img
+                src="./img/fammer.jpg"
+                class="d-block w-100"
+                alt="Seasonal farming activities in Cambodia"
+              />
+              <div class="carousel-caption d-none d-md-block">
+                <h5>ស្រែនារដូវ វស្សា</h5>
+                <p>ប្រជាកសិករចាប់ផ្ដើមធ្វើស្រែចម្ការ និងទប់ទឹក</p>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img
+                src="./img/kasikor.jpg"
+                class="d-block w-100"
+                alt="Seasonal farming activities in Cambodia"
+              />
+              <div class="carousel-caption d-none d-md-block">
+                <h5>ស្រែនារដូវ វស្សា</h5>
+                <p>ប្រជាកសិករចាប់ផ្ដើមធ្វើស្រែចម្ការ និងទប់ទឹក</p>
+              </div>
+            </div>
+          </div>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </section>
+      <section class="letter-section">
+        <marquee behavior="" direction="">
+          <p class="main">កសិករសម័យឌីជិថល​ ជាមួយនិងឧស្សាហកម្ម ៤.០​</p>
+        </marquee>
+        <p class="text-more">
+          កសិកម្មកម្ពុជាកំពុងស្ថិតនៅក្នុងការផ្លាស់ប្ដូរយ៉ាងឆាប់រហ័ស។ កំណើនកសិកម្មជាមធ្យម​ 5.3% ក្នុងកំឡុងឆ្នាំ 2004-2012​ ដែលជាចំនួនខ្ពស់បំផុតក្នុងពិភពលោក។
+          ផលិតកម្មកសិកម្ម​សរុបរបស់ប្រទេសកម្ពុជាបានកើនឡើង 8.7%​ ក្នងអំឡុងឆ្នាំ 2004-2012 ដោយសារតែទិន្នផលស្រូវកាន់តែខ្ពស់។​ វាក៏មាន​ការកើនឡើងគួរឲកត់សម្គាល់នៃពោត (20%) ដំឡូងមី (51%) អំពៅ (22%) និង​បន្លែ (10%) ទោះបីមូលដ្ឋានដំបូងទាបក៏ដោយ។
+        </p>
+      </section>
+    </div>
+    <div class="second-main">
+      <h2>ទំនិញទើបចូលស្តុកថ្មីៗ</h2>
+      <div class="input-search">
+        <input
+          type="search"
+          placeholder="ស្វែងរកទំនិញ..."
+          id="second-search"
+          aria-label="Search for items"
+        />
+      </div>
+    </div>
+
+    <div class="content-img">
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/cornn.jpg" alt="Fresh Corn 1" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ពោត (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/Carrot.jpg" alt="Fresh Corn 2" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ការ៉ុត​ (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/rice.jpg" alt="Fresh Corn 3" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ស្រូវ (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/rice-bay.jpg" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">អង្ករ រំដួល (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/durian.jpg" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">​ធូរេន (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/papaya.webp" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ល្ហុង (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/saomao.jpg" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">សាវម៉ៅ (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/spy.jpg" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ស្ពៃ (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/chilli.webp" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ម្ទេសប្លោក (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/Lapov.png" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ល្ពៅ​ (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/grape.jpg" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ទំពាំងបាយជូរ (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/apple.png" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ប៉ោម (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/nornong =.webp" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ននោង​ (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/orange.jpg" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ក្រូច​ (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/watermelon.jpg" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ឪឡឹក (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម៉្មង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="img-card">
+          <img src="./img/makhot.jpg" alt="Fresh Corn 4" />
+        </div>
+        <div class="product-name">
+          <p class="item-name">ម្ឃុត (ធម្មជាតិ)</p>
+        </div>
+        <div class="btn-buy">
+          <button>កុម្ម៉ង់ទិញ</button>
+          <p>៣០០០​ ៛</p>
+        </div>
+      </div>  
+
+     
+    </div>
+<hr>
+    <section class="local-support-section">
+        <h2>ជួយគាំទ្រផលិតផលក្នុងស្រុក ចំណេញថវិកា​ព្រមទាំងពេលវេលា</h2>
+        <div class="main-veg">
+          <div class="vegetable">
+            <img src="./img/Vegetable.png" alt="Local Vegetable" />
+          </div>
+          <div class="quote">
+            <p>
+              “ផ្លែឈើរបស់កម្ពុជា គឺជាផ្លែឈើត្រូពិច ដែលសម្បូរទៅដោយរសជាតិ
+              និងសម្បូរបែប”
+            </p>
+            <p>
+              បន្លែ​ជា​ដំណាំ​ដែល​ទទួល​បាន​ផលចំណេញ​ច្រើន​បំផុត​ក្នុង​ការ​ផលិត​នៅ​កម្ពុជា។
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="footer-container">
+          <div class="footer-logo">
+            <h2 class="navbar-brand">ផ្សារកសិករ</h2>
+            <p>" បន្លែស្រស់ ដឹកដល់មាត់ទ្វារផ្ទះរបស់បងប្អូនកម្ពុជា "</p>
+          </div>
+      
+          <div class="footer-links">
+            <h4>ទំនាក់ទំនងឆាប់រហ័ស</h4>
+            <ul>
+              <li><a href="#">ទំព័រដើម</a></li>
+              <li><a href="#">អំពីយើង</a></li>
+              <li><a href="#">ទំនិញថ្មីៗ</a></li>
+              <li><a href="#">ទំនាក់ទំនង</a></li>
+            </ul>
+          </div>
+      
+          <div class="footer-social">
+            <h4>តាមដានពួកយើង</h4>
+            <div class="social-icons">
+              <a href="#" class="fab fa-facebook"></a>
+              <a href="#" class="fab fa-twitter"></a>
+              <a href="#" class="fab fa-instagram"></a>
+              <a href="#" class="fa-brands fa-telegram"></a>
+            </div>
+          </div>
+        </div>
+        <div class="phone-number">+855 68 000 000 </div>
+      </footer>
+      
+      
+      
+      
+  </body>
+</html>
