@@ -241,8 +241,8 @@ footer {
   font-size: 16px;
   transition: color 0.3s ease;
 }
-.phone-number{
-    margin-left: 55px;
+.phone-number {
+  margin-left: 55px;
 }
 .footer-links a:hover {
   color: #f39c12;
@@ -250,7 +250,7 @@ footer {
 .footer-social h4 {
   margin-bottom: 10px;
 }
-.footer-container h4{
+.footer-container h4 {
   font-family: "Koulen", sans-serif;
 }
 .social-icons a {
@@ -317,7 +317,6 @@ footer {
   }
   .text-more {
     text-align: justify;
-    width: 90%;
   }
   .second-main {
     flex-direction: column;
@@ -345,14 +344,20 @@ footer {
   .vegetable img {
     width: 80%;
   }
-  .footer-links{
+  .footer-links {
     display: none;
   }
-  .footer-social{
+  .footer-social {
     margin-top: -20px;
   }
-  .phone-number{
+  .phone-number {
     margin-left: 0px;
     margin-top: 15px;
+  }
+  @media (max-width: 414px) {
+    .text-more {
+      text-align: justify;
+      width: 90%;
+    }
   }
 }
