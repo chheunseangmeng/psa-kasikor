@@ -317,7 +317,7 @@ footer {
   }
   .text-more {
     text-align: justify;
-    padding: 0 30px;
+    width: 90%;
   }
   .second-main {
     flex-direction: column;
