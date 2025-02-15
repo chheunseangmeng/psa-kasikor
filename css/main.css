@@ -309,7 +309,7 @@ footer {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media screen and (max-width: 428px) {
+@media (max-width: 428px) {
   .boot-main {
     display: flex;
     flex-direction: column;
@@ -357,7 +357,7 @@ footer {
   @media (max-width: 414px) {
     .text-more {
       text-align: justify;
-      width: 90%;
+      padding: 0 10px;
     }
   }
 }
