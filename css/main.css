@@ -310,6 +310,9 @@ footer {
   }
 }
 @media (max-width: 428px) {
+  .letter-section {
+    flex: 0.7;
+  }
   .boot-main {
     display: flex;
     flex-direction: column;
@@ -357,7 +360,6 @@ footer {
   @media (max-width: 414px) {
     .text-more {
       text-align: justify;
-      padding: 0 10px;
     }
   }
 }
