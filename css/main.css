@@ -90,6 +90,8 @@ ul li a {
 }
 .letter-section {
   flex: 1.2;
+  max-width: 100%;
+  overflow-x: hidden; 
 }
 .main {
   font-family: "Koulen", sans-serif;
@@ -97,10 +99,12 @@ ul li a {
 }
 .text-more {
   line-height: 40px;
-  /* font-family: "Dangrek", serif;   */
   font-family: "Preahvihear", serif;
   font-size: 20px;
   text-align: justify;
+  word-wrap: break-word;
+  width: 100%; 
+  max-width: 100%;
 }
 .second-main {
   display: flex;
@@ -275,7 +279,6 @@ footer {
     align-items: center;
     gap: 30px;
   }
-
   .title {
     font-size: 24px;
   }
@@ -308,11 +311,26 @@ footer {
   .content-img {
     grid-template-columns: repeat(2, 1fr);
   }
-}
-@media (max-width: 428px) {
-  .letter-section {
-    flex: 0.7;
+  .main {
+    font-size: 24px;
   }
+
+  .text-more {
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 480px) { /* For very small screens */
+  .main {
+    font-size: 20px; /* Even smaller font size for small phones */
+  }
+
+  .text-more {
+    font-size: 14px; /* Adjust for smaller text */
+  }
+}
+
+@media (max-width: 428px) {
   .boot-main {
     display: flex;
     flex-direction: column;
@@ -357,9 +375,18 @@ footer {
     margin-left: 0px;
     margin-top: 15px;
   }
-  @media (max-width: 414px) {
-    .text-more {
-      text-align: justify;
-    }
+  .main {
+    font-size: 20px; /* Even smaller font size for small phones */
+  }
+
+  .text-more {
+    font-size: 18px; /* Adjust for smaller text */
+  }
+ 
+}
+
+@media (max-width: 414px) {
+  .text-more {
+    text-align: justify;
   }
 }
