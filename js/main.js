@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Product data
+  // Product data with Khmer names and images
   let products = JSON.parse(localStorage.getItem('products')) || [
     { id: 1, name: 'ពោត (ធម្មជាតិ)', price: 3000, image: './img/cornn.jpg' },
     { id: 2, name: 'ការ៉ុត (ធម្មជាតិ)', price: 3000, image: './img/Carrot.jpg' },
@@ -25,20 +25,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const productContainer = document.querySelector('.content-img');
   const cartModal = createCartModal();
   const productModal = createProductModal();
-  const notification = createNotification();
+  const detailModal = createDetailModal();
+  const successMessage = createSuccessMessage();
   document.body.appendChild(cartModal);
   document.body.appendChild(productModal);
-  document.body.appendChild(notification);
+  document.body.appendChild(detailModal);
+  document.body.appendChild(successMessage);
 
   // Render products
-  function renderProducts() {
+  function renderProducts(filteredProducts = products) {
     productContainer.innerHTML = '';
-    products.forEach(product => {
+    filteredProducts.forEach(product => {
       const productElement = document.createElement('div');
       productElement.classList.add('item');
       productElement.innerHTML = `
         <div class="img-card">
-          <img src="${product.image}" alt="${product.name}">
+          <img src="${product.image}" alt="${product.name}" class="detail-trigger" data-id="${product.id}">
         </div>
         <div class="product-name">
           <p class="item-name">${product.name}</p>
@@ -46,52 +48,24 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="btn-buy">
           <button class="buy-btn" data-id="${product.id}">កុម៉្មង់ទិញ</button>
           <p>${product.price} ៛</p>
-          <div class="dropdown">
-            <button class="dropdown-toggle"><i class="fas fa-ellipsis-v"></i></button>
-            <div class="dropdown-menu">
-              <button class="edit-btn" data-id="${product.id}"><i class="fas fa-pencil-alt"></i> កែ</button>
-              <button class="delete-btn" data-id="${product.id}"><i class="fas fa-trash"></i> លុប</button>
-            </div>
-          </div>
         </div>
       `;
       productContainer.appendChild(productElement);
     });
 
-    // Attach event listeners
-    document.querySelectorAll('.buy-btn').forEach(btn => {
-      btn.addEventListener('click', () => addToCart(parseInt(btn.dataset.id)));
-    });
-    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-      toggle.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent click from bubbling up
-        const menu = toggle.nextElementSibling;
-        const isVisible = menu.style.display === 'block';
-        document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
-        menu.style.display = isVisible ? 'none' : 'block';
-        if (!isVisible) {
-          menu.style.animation = 'slideDown 0.2s ease';
-        }
-      });
-    });
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-      btn.addEventListener('click', () => openProductModal(parseInt(btn.dataset.id)));
-    });
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', () => deleteProduct(parseInt(btn.dataset.id)));
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.dropdown')) {
-        document.querySelectorAll('.dropdown-menu').forEach(menu => {
-          menu.style.display = 'none';
-        });
+    // Event delegation for product actions
+    productContainer.addEventListener('click', (e) => {
+      const target = e.target;
+      const id = parseInt(target.dataset.id);
+      if (target.classList.contains('buy-btn')) {
+        addToCart(id);
+      } else if (target.classList.contains('detail-trigger')) {
+        openDetailModal(id);
       }
     });
   }
 
-  // Add to cart
+  // Add to cart with success message
   function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     const cartItem = cart.find(item => item.id === productId);
@@ -102,8 +76,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     saveCart();
     updateCartModal();
+    updateCartBadge();
     animateCartButton();
-    showNotification(`${product.name} បានបន្ថែមដោយជោគជ័យ!`);
+    showSuccessMessage(`${product.name} បានបន្ថែមទៅកន្ត្រក!`);
+  }
+
+  // Show animated success message
+  function showSuccessMessage(message) {
+    successMessage.textContent = message;
+    successMessage.style.display = 'block';
+    successMessage.style.opacity = '1';
+    successMessage.style.transform = 'translateY(0)';
+    setTimeout(() => {
+      successMessage.style.opacity = '0';
+      successMessage.style.transform = 'translateY(-20px)';
+      setTimeout(() => {
+        successMessage.style.display = 'none';
+      }, 300);
+    }, 2000);
   }
 
   // Save cart to localStorage
@@ -116,25 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('products', JSON.stringify(products));
   }
 
-  // Create notification
-  function createNotification() {
-    const div = document.createElement('div');
-    div.classList.add('notification');
-    div.style.display = 'none';
-    return div;
-  }
-
-  // Show notification
-  function showNotification(message) {
-    notification.textContent = message;
-    notification.style.display = 'block';
-    notification.style.animation = 'slideInRight 0.3s ease, fadeOut 0.3s ease 1.7s forwards';
-    setTimeout(() => {
-      notification.style.display = 'none';
-    }, 2000);
-  }
-
-  // Create cart modal
+  // Create cart modal with animation
   function createCartModal() {
     const modal = document.createElement('div');
     modal.classList.add('modal', 'cart-modal');
@@ -142,63 +114,76 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.innerHTML = `
       <div class="modal-content cart-content">
         <span class="close-cart">×</span>
-        <h2>កន្ត្រកទំនិញ</h2>
+        <h2>កន្ត្រកទិញ</h2>
         <div class="cart-items"></div>
         <div class="cart-summary">
           <p class="cart-total">សរុប: 0 ៛</p>
           <button class="checkout-btn">បញ្ជាទិញ</button>
+          <div class="checkout-actions" style="display: none; margin-top: 10px;">
+            <button class="ok-btn">OK</button>
+            <button class="pdf-btn">Save as PDF</button>
+          </div>
         </div>
       </div>
     `;
+
+    // Add event listeners for modal actions
     modal.querySelector('.close-cart').addEventListener('click', () => {
       modal.style.display = 'none';
     });
     modal.querySelector('.checkout-btn').addEventListener('click', () => {
       if (cart.length > 0) {
-        showReceiptModal();
+        showSuccessMessage('ការបញ្ជាទិញបានជោគជ័យ!');
+        modal.querySelector('.checkout-btn').style.display = 'none';
+        modal.querySelector('.checkout-actions').style.display = 'flex';
       } else {
-        showNotification('កន្ត្រកទទេ!');
+        showSuccessMessage('កន្ត្រកទទេ!');
       }
+    });
+    modal.querySelector('.ok-btn').addEventListener('click', () => {
+      cart = [];
+      saveCart();
+      updateCartModal();
+      updateCartBadge();
+      modal.style.display = 'none';
+      modal.querySelector('.checkout-btn').style.display = 'block';
+      modal.querySelector('.checkout-actions').style.display = 'none';
+    });
+    modal.querySelector('.pdf-btn').addEventListener('click', () => {
+      generatePDF();
     });
 
-    // Make cart modal draggable
-    const modalContent = modal.querySelector('.cart-content');
-    let isDragging = false;
-    let currentX, currentY, initialX, initialY;
-    modalContent.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      initialX = e.clientX - currentX;
-      initialY = e.clientY - currentY;
-      modalContent.style.cursor = 'grabbing';
-    });
-    document.addEventListener('mousemove', (e) => {
-      if (isDragging) {
-        e.preventDefault();
-        currentX = e.clientX - initialX;
-        currentY = e.clientY - initialY;
-        modalContent.style.left = `${currentX}px`;
-        modalContent.style.top = `${currentY}px`;
-        modalContent.style.transform = 'none';
+    // Add event listener for cart actions only once
+    const cartItemsContainer = modal.querySelector('.cart-items');
+    cartItemsContainer.addEventListener('click', (e) => {
+      const target = e.target;
+      const id = parseInt(target.dataset.id);
+      if (target.classList.contains('quantity-increase')) {
+        updateQuantity(id, 1);
+      } else if (target.classList.contains('quantity-decrease')) {
+        updateQuantity(id, -1);
+      } else if (target.classList.contains('remove-cart-item')) {
+        cart = cart.filter(item => item.id !== id);
+        saveCart();
+        updateCartModal();
+        updateCartBadge();
       }
-    });
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
-      modalContent.style.cursor = 'grab';
     });
 
     return modal;
   }
 
-  // Update cart modal
+  // Update cart modal with animations
   function updateCartModal() {
     const cartItemsContainer = cartModal.querySelector('.cart-items');
     const cartTotal = cartModal.querySelector('.cart-total');
     cartItemsContainer.innerHTML = '';
     let total = 0;
-    cart.forEach(item => {
+    cart.forEach((item, index) => {
       total += item.price * item.quantity;
       const itemElement = document.createElement('div');
       itemElement.classList.add('cart-item');
+      itemElement.style.animationDelay = `${index * 0.1}s`;
       itemElement.innerHTML = `
         <img src="${item.image}" alt="${item.name}">
         <div class="cart-item-details">
@@ -211,38 +196,38 @@ document.addEventListener('DOMContentLoaded', () => {
           <button class="quantity-increase" data-id="${item.id}">+</button>
         </div>
         <p>${item.price * item.quantity} ៛</p>
-        <button class="remove-cart-item" data-id="${item.id}"><i class="fas fa-trash"></i></button>
+        <button class="remove-cart-item" data-id="${item.id}"><i class="fas fa-times"></i></button>
       `;
       cartItemsContainer.appendChild(itemElement);
-      itemElement.style.animation = 'slideIn 0.3s ease';
     });
     cartTotal.textContent = `សរុប: ${total} ៛`;
-    cartItemsContainer.querySelectorAll('.quantity-increase').forEach(btn => {
-      btn.addEventListener('click', () => updateQuantity(parseInt(btn.dataset.id), 1));
-    });
-    cartItemsContainer.querySelectorAll('.quantity-decrease').forEach(btn => {
-      btn.addEventListener('click', () => updateQuantity(parseInt(btn.dataset.id), -1));
-    });
-    cartItemsContainer.querySelectorAll('.remove-cart-item').forEach(btn => {
-      btn.addEventListener('click', () => {
-        cart = cart.filter(item => item.id !== parseInt(btn.dataset.id));
-        saveCart();
-        updateCartModal();
-      });
-    });
   }
 
-  // Update quantity
+  // Update cart item quantity
   function updateQuantity(productId, change) {
     const cartItem = cart.find(item => item.id === productId);
     if (cartItem) {
       cartItem.quantity += change;
-      if (cartItem.quantity <= 0) {
-        cart = cart.filter(item => item.id !== productId);
+      if (cartItem.quantity < 1) {
+        cartItem.quantity = 1;
       }
       saveCart();
       updateCartModal();
+      updateCartBadge();
     }
+  }
+
+  // Update cart badge count
+  function updateCartBadge() {
+    const cartButton = document.querySelector('.view-cart-btn');
+    const badge = cartButton.querySelector('.cart-badge') || document.createElement('span');
+    badge.classList.add('cart-badge');
+    const totalItems = cart.length > 0 ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
+    badge.textContent = totalItems;
+    if (!cartButton.contains(badge)) {
+      cartButton.appendChild(badge);
+    }
+    badge.style.display = totalItems > 0 ? 'inline-block' : 'none';
   }
 
   // Animate cart button
@@ -258,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.classList.add('modal', 'product-modal');
     modal.style.display = 'none';
     modal.innerHTML = `
-      <div class="modal-content">
+      <div class="modal-content sale">
         <span class="close-product">×</span>
         <h2>គ្រប់គ្រងផលិតផល</h2>
         <form id="product-form">
@@ -268,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <label>តម្លៃ (៛):</label>
           <input type="number" id="product-price" required>
           <label>រូបភាព (URL):</label>
-          <input type="text" id="product-image" required>
+          <input type="file" id="product-image" required>
           <button type="submit">រក្សាទុក</button>
         </form>
       </div>
@@ -283,115 +268,76 @@ document.addEventListener('DOMContentLoaded', () => {
     return modal;
   }
 
-  // Create receipt modal
-  function createReceiptModal() {
+  // Create detail modal
+  function createDetailModal() {
     const modal = document.createElement('div');
-    modal.classList.add('modal', 'receipt-modal');
+    modal.classList.add('modal', 'detail-modal');
     modal.style.display = 'none';
     modal.innerHTML = `
-      <div class="modal-content receipt-content">
-        <span class="close-receipt">×</span>
-        <h2>បង្កាន់ដៃទិញ</h2>
-        <div class="receipt-items"></div>
-        <p class="receipt-total"></p>
-        <div class="receipt-actions">
-          <button class="okay-btn">យល់ព្រម</button>
-          <button class="export-pdf-btn">នាំចេញជា PDF</button>
+      <div class="modal-content detail-content">
+        <span class="close-detail">×</span>
+        <div class="detail-header">
+          <h2>ព័ត៌មានលម្អិតផលិតផល</h2>
+        </div>
+        <div class="detail-view">
+          <div class="detail-image-wrapper">
+            <img id="detail-image" src="" alt="">
+          </div>
+          <div class="detail-info">
+            <p id="detail-name" class="detail-name"></p>
+            <p id="detail-price" class="detail-price"></p>
+            <div class="quantity-input">
+              <label>បរិមាណ:</label>
+              <input type="number" id="detail-quantity" min="1" value="1">
+            </div>
+            <button class="buy-now-btn">ទិញឥឡូវ</button>
+            <div class="detail-actions">
+              <button class="edit-detail-btn" data-id=""><i class="fas fa-pencil-alt"></i> កែ</button>
+              <button class="delete-detail-btn" data-id=""><i class="fas fa-trash"></i> លុប</button>
+            </div>
+          </div>
         </div>
       </div>
     `;
+    modal.querySelector('.close-detail').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    modal.querySelector('.buy-now-btn').addEventListener('click', () => {
+      const id = parseInt(modal.dataset.id);
+      const quantity = parseInt(modal.querySelector('#detail-quantity').value) || 1;
+      addToCart(id, quantity);
+      modal.style.display = 'none';
+    });
+    modal.querySelector('.edit-detail-btn').addEventListener('click', () => {
+      const id = parseInt(modal.dataset.id);
+      openProductModal(id);
+      modal.style.display = 'none';
+    });
+    modal.querySelector('.delete-detail-btn').addEventListener('click', () => {
+      const id = parseInt(modal.dataset.id);
+      deleteProduct(id);
+      modal.style.display = 'none';
+    });
     return modal;
   }
 
-  // Show receipt modal
-  function showReceiptModal() {
-    let receiptModal = document.querySelector('.receipt-modal');
-    if (!receiptModal) {
-      receiptModal = createReceiptModal();
-      document.body.appendChild(receiptModal);
-    }
-    const receiptItems = receiptModal.querySelector('.receipt-items');
-    const receiptTotal = receiptModal.querySelector('.receipt-total');
-    receiptItems.innerHTML = '';
-    let total = 0;
-    cart.forEach(item => {
-      total += item.price * item.quantity;
-      const itemElement = document.createElement('div');
-      itemElement.classList.add('receipt-item');
-      itemElement.innerHTML = `
-        <p>${item.name}</p>
-        <p>${item.quantity} x ${item.price} ៛ = ${item.price * item.quantity} ៛</p>
-      `;
-      receiptItems.appendChild(itemElement);
-    });
-    receiptTotal.textContent = `សរុប: ${total} ៛`;
-    receiptModal.style.display = 'block';
-    receiptModal.querySelector('.receipt-content').style.animation = 'fadeIn 0.3s ease';
-
-    receiptModal.querySelector('.close-receipt').addEventListener('click', () => {
-      receiptModal.style.display = 'none';
-    });
-    receiptModal.querySelector('.okay-btn').addEventListener('click', () => {
-      receiptModal.style.display = 'none';
-      cart = [];
-      saveCart();
-      updateCartModal();
-      cartModal.style.display = 'none';
-      showNotification('ការបញ្ជាទិញបានជោគជ័យ!');
-    });
-    receiptModal.querySelector('.export-pdf-btn').addEventListener('click', () => {
-      exportReceiptAsPDF();
-      receiptModal.style.display = 'none';
-      cart = [];
-      saveCart();
-      updateCartModal();
-      cartModal.style.display = 'none';
-      showNotification('ការបញ្ជាទិញបានជោគជ័យ និង PDF បាននាំចេញ!');
-    });
-  }
-
-  // Export receipt as PDF
-  function exportReceiptAsPDF() {
-    const latexContent = `
-\\documentclass[a4paper,12pt]{article}
-\\usepackage[utf8]{inputenc}
-\\usepackage[khmer]{babel}
-\\usepackage{geometry}
-\\geometry{margin=1in}
-\\usepackage{booktabs}
-\\usepackage{noto}
-\\setlength{\\parindent}{0pt}
-\\begin{document}
-\\begin{center}
-  \\textbf{\\Large បង្កាន់ដៃទិញ - ផ្សារកសិករ}\\\\
-  \\vspace{0.5cm}
-  \\today
-\\end{center}
-\\vspace{1cm}
-\\begin{tabular}{l r r r}
-  \\toprule
-  \\textbf{ឈ្មោះផលិតផល} & \\textbf{ចំនួន} & \\textbf{តម្លៃ (៛)} & \\textbf{សរុប (៛)} \\\\
-  \\midrule
-${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${item.price} & ${item.price * item.quantity} \\\\`).join('')}
-  \\bottomrule
-\\end{tabular}
-\\vspace{1cm}
-\\textbf{សរុប: ${cart.reduce((sum, item) => sum + item.price * item.quantity, 0)} ៛}
-\\end{document}
-    `;
-    const blob = new Blob([latexContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'receipt.tex';
-    a.click();
-    URL.revokeObjectURL(url);
+  // Open detail modal
+  function openDetailModal(productId) {
+    const product = products.find(p => p.id === productId);
+    detailModal.dataset.id = productId;
+    detailModal.querySelector('#detail-image').src = product.image;
+    detailModal.querySelector('#detail-name').textContent = product.name;
+    detailModal.querySelector('#detail-price').textContent = `${product.price} ៛`;
+    detailModal.querySelector('#detail-quantity').value = 1;
+    detailModal.querySelector('.edit-detail-btn').dataset.id = productId;
+    detailModal.querySelector('.delete-detail-btn').dataset.id = productId;
+    detailModal.style.display = 'block';
+    detailModal.classList.add('modal-animate');
   }
 
   // Open product modal for add/edit
   function openProductModal(productId = null) {
     productModal.style.display = 'block';
-    productModal.querySelector('.modal-content').style.animation = 'fadeIn 0.3s ease';
     const form = productModal.querySelector('#product-form');
     if (productId) {
       const product = products.find(p => p.id === productId);
@@ -415,26 +361,46 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
     if (id) {
       const productIndex = products.findIndex(p => p.id === id);
       products[productIndex] = { id, name, price, image };
+      const cartItem = cart.find(item => item.id === id);
+      if (cartItem) {
+        cartItem.name = name;
+        cartItem.price = price;
+        cartItem.image = image;
+      }
     } else {
       const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
       products.push({ id: newId, name, price, image });
     }
 
     saveProducts();
+    saveCart();
     renderProducts();
+    updateCartModal();
     productModal.style.display = 'none';
+    showSuccessMessage(`${name} បានរក្សាទុកជោគជ័យ!`);
   }
 
   // Delete product
   function deleteProduct(productId) {
     if (confirm('តើអ្នកប្រាកដជាចង់លុបផលិតផលនេះមែនទេ?')) {
+      const product = products.find(p => p.id === productId);
       products = products.filter(p => p.id !== productId);
       cart = cart.filter(item => item.id !== productId);
       saveProducts();
       saveCart();
       renderProducts();
       updateCartModal();
+      updateCartBadge();
+      showSuccessMessage(`${product.name} បានលុបជោគជ័យ!`);
     }
+  }
+
+  // Create success message element
+  function createSuccessMessage() {
+    const message = document.createElement('div');
+    message.classList.add('success-message');
+    message.style.display = 'none';
+    return message;
   }
 
   // Add product button in navbar
@@ -444,7 +410,7 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
     openProductModal();
   });
 
-  // View cart button
+  // View cart button with badge
   const cartButton = document.createElement('button');
   cartButton.classList.add('view-cart-btn');
   cartButton.innerHTML = '<i class="fas fa-shopping-cart"></i> មើលកន្ត្រក';
@@ -456,67 +422,23 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
   cartButton.style.borderRadius = '5px';
   cartButton.style.cursor = 'pointer';
   cartButton.style.fontFamily = '"Koulen", sans-serif';
+  cartButton.style.position = 'relative';
   document.querySelector('.second-main').appendChild(cartButton);
   cartButton.addEventListener('click', () => {
     updateCartModal();
-    cartModal.style.display = 'block';
-    cartModal.querySelector('.cart-content').style.animation = 'slideInRight 0.3s ease';
+    cartModal.style.display = 'flex';
+    cartModal.classList.add('modal-animate');
+    setTimeout(() => cartModal.classList.remove('modal-animate'), 300);
   });
 
   // Search functionality
   document.querySelector('#second-search').addEventListener('input', (e) => {
     const searchTerm = e.target.value.toLowerCase();
     const filteredProducts = products.filter(p => p.name.toLowerCase().includes(searchTerm));
-    productContainer.innerHTML = '';
-    filteredProducts.forEach(product => {
-      const productElement = document.createElement('div');
-      productElement.classList.add('item');
-      productElement.innerHTML = `
-        <div class="img-card">
-          <img src="${product.image}" alt="${product.name}">
-        </div>
-        <div class="product-name">
-          <p class="item-name">${product.name}</p>
-        </div>
-        <div class="btn-buy">
-          <button class="buy-btn" data-id="${product.id}">កុម៉្មង់ទិញ</button>
-          <p>${product.price} ៛</p>
-          <div class="dropdown">
-            <button class="dropdown-toggle"><i class="fas fa-ellipsis-v"></i></button>
-            <div class="dropdown-menu">
-              <button class="edit-btn" data-id="${product.id}"><i class="fas fa-pencil-alt"></i> កែ</button>
-              <button class="delete-btn" data-id="${product.id}"><i class="fas fa-trash"></i> លុប</button>
-            </div>
-          </div>
-        </div>
-      `;
-      productContainer.appendChild(productElement);
-    });
-
-    document.querySelectorAll('.buy-btn').forEach(btn => {
-      btn.addEventListener('click', () => addToCart(parseInt(btn.dataset.id)));
-    });
-    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-      toggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const menu = toggle.nextElementSibling;
-        const isVisible = menu.style.display === 'block';
-        document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
-        menu.style.display = isVisible ? 'none' : 'block';
-        if (!isVisible) {
-          menu.style.animation = 'slideDown 0.2s ease';
-        }
-      });
-    });
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-      btn.addEventListener('click', () => openProductModal(parseInt(btn.dataset.id)));
-    });
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', () => deleteProduct(parseInt(btn.dataset.id)));
-    });
+    renderProducts(filteredProducts);
   });
 
-  // Modal and other styles
+  // Modal and dropdown styles
   const style = document.createElement('style');
   style.textContent = `
     .modal {
@@ -526,37 +448,38 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
       width: 100%;
       height: 100%;
       background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
       z-index: 1000;
     }
-    .cart-modal {
-      display: flex;
-      justify-content: flex-end;
-      align-items: flex-start;
-      padding: 20px;
+    .modal-animate .modal-content {
+      animation: zoomIn 0.4s ease;
     }
-    .cart-content {
-      background: #fff;
+    .cart-content, .detail-content {
+      background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
       padding: 30px;
-      border-radius: 15px;
       max-width: 600px;
-      width: 100%;
+      width: 90%;
       position: relative;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-      cursor: grab;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      border-radius: 15px;
+      border: 1px solid #e0e0e0;
     }
-    .cart-content:active {
-      cursor: grabbing;
-    }
-    .close-cart, .close-product, .close-receipt {
+    .close-cart, .close-product, .close-detail {
       position: absolute;
       top: 15px;
       right: 20px;
       font-size: 28px;
       cursor: pointer;
-      color: #333;
+      color: #555;
+      transition: color 0.3s;
+    }
+    .close-cart:hover, .close-product:hover, .close-detail:hover {
+      color: #000;
     }
     .cart-items {
-      max-height: 500px;
+      max-height: 400px;
       overflow-y: auto;
       margin-bottom: 20px;
     }
@@ -567,16 +490,17 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
       gap: 10px;
       padding: 10px;
       border-bottom: 1px solid #eee;
+      animation: slideIn 0.3s ease forwards;
       transition: background 0.2s;
     }
     .cart-item:hover {
-      background: #f9f9f9;
+      background: #f5f5f5;
     }
     .cart-item img {
       width: 50px;
       height: 50px;
       object-fit: cover;
-      border-radius: 5px;
+      border-radius: 8px;
     }
     .cart-item-details p {
       margin: 0;
@@ -591,20 +515,26 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
       background: #007bff;
       color: #fff;
       border: none;
-      padding: 5px 10px;
+      padding: 4px 10px;
       border-radius: 5px;
       cursor: pointer;
       font-size: 16px;
+      transition: background 0.2s;
     }
     .cart-item-quantity button:hover {
       background: #0056b3;
     }
     .remove-cart-item {
       background: none;
+      color: #666;
       border: none;
-      color: red;
-      font-size: 18px;
+      padding: 0;
       cursor: pointer;
+      font-size: 16px;
+      transition: color 0.2s;
+    }
+    .remove-cart-item:hover {
+      color: #333;
     }
     .cart-summary {
       text-align: right;
@@ -614,70 +544,66 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
       font-weight: bold;
       margin-bottom: 10px;
       font-family: "Koulen", sans-serif;
+      color: #333;
     }
-    .checkout-btn {
-      background: orangered;
-      color: #fff;
+    .checkout-btn, .ok-btn, .pdf-btn, .buy-now-btn, .edit-detail-btn, .delete-detail-btn {
       border: none;
-      padding: 12px 20px;
-      border-radius: 5px;
+      padding: 8px 20px;
+      border-radius: 25px;
       cursor: pointer;
-      width: 100%;
-      font-size: 18px;
+      font-size: 16px;
       font-family: "Koulen", sans-serif;
-      transition: background 0.3s, transform 0.2s;
+      transition: transform 0.2s, box-shadow 0.3s;
     }
-    .checkout-btn:hover {
-      background: #e44d26;
-      transform: scale(1.05);
+    .checkout-btn, .buy-now-btn {
+      background: linear-gradient(90deg, #ff6f61, #ff8a65);
+      color: #fff;
+    }
+    .buy-now-btn{
+        width: 170px;
+    }
+    .ok-btn {
+      background: linear-gradient(90deg, #1e90ff, #00b7eb);
+      color: #fff;
+    }
+    .pdf-btn {
+      background: linear-gradient(90deg, #28a745, #34c759);
+      color: #fff;
+    }
+    .checkout-btn:hover, .ok-btn:hover, .pdf-btn:hover, .buy-now-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .edit-detail-btn {
+      background:none;
+      color: #000;
+    }
+    .delete-detail-btn {
+      color:#ff4d4d;
+      background:none;
+      
+    }
+    .edit-detail-btn:hover, .delete-detail-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .checkout-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
     }
     .modal-content {
       background: #fff;
       padding: 20px;
-      border-radius: 10px;
-      max-width: 500px;
+      max-width: 630px;
       width: 90%;
       position: relative;
-      margin: auto;
+      border-radius: 10px;
     }
-    .receipt-content {
-      max-width: 600px;
-      width: 90%;
-    }
-    .receipt-items {
-      margin-bottom: 20px;
-    }
-    .receipt-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-      font-family: "Preahvihear", serif;
-    }
-    .receipt-total {
-      font-size: 20px;
-      font-weight: bold;
-      text-align: right;
-      font-family: "Koulen", sans-serif;
-    }
-    .receipt-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-    .okay-btn, .export-pdf-btn {
-      background: #28a745;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-family: "Koulen", sans-serif;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .okay-btn:hover, .export-pdf-btn:hover {
-      background: #218838;
-      transform: scale(1.05);
+    .sale{
+      border-radius:0;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
     }
     #product-form {
       display: flex;
@@ -700,58 +626,149 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
       border-radius: 5px;
       cursor: pointer;
     }
-    .dropdown {
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      z-index: 10;
+    .detail-header {
+      text-align: center;
+      margin-bottom: 20px;
     }
-    .dropdown-toggle {
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: #333;
-      padding: 5px;
-      line-height: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .dropdown-toggle i {
+    .detail-header h2 {
+      font-family: "Koulen", sans-serif;
+      color: #ff6f61;
       margin: 0;
+      font-size: 24px;
+      position: relative;
+      display: inline-block;
     }
-    .dropdown-toggle:hover {
-      color: #007bff;
-    }
-    .dropdown-menu {
-      display: none;
+    .detail-header h2::after {
+      content: '';
+      width: 50%;
+      height: 3px;
+      background: linear-gradient(90deg, #ff6f61, #ff8a65);
       position: absolute;
-      right: 0;
-      top: 100%;
-      background: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      border-radius: 5px;
-      min-width: 120px;
-      z-index: 100;
+      bottom: -5px;
+      left: 25%;
+      border-radius: 2px;
     }
-    .dropdown-menu button {
+      h2{
+        font-family: "Koulen", sans-serif;
+        text-align: center;
+      }
+    .detail-content{
+      border-radius:0;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    .detail-view {
+      display: flex;
+      gap: 55px;
+      align-items: center;
+      background: #fff;
+      padding: 20px;
+      justify-content:center;
+      align-item:center;
+    }
+    .detail-image-wrapper {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+    .detail-image-wrapper:hover {
+      transform: scale(1.05);
+    }
+    .detail-image-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0.2));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .detail-image-wrapper:hover::before {
+      opacity: 1;
+    }
+    .detail-view img {
+      width: 230px;
+      height: 230px;
+      object-fit: cover;
+      border-radius: 15px;
+      transition: transform 0.3s;
+    }
+    .detail-info {
+      flex: 1;
+      animation: fadeInRight 0.5s ease;
+    }
+    .detail-name {
+      font-family: "Koulen", sans-serif;
+      font-size: 22px;
+      color: #333;
+      margin: 0 0 10px;
+      border-left: 4px solid #ff6f61;
+      padding-left: 10px;
+    }
+    .detail-price {
+      font-family: "Preahvihear", serif;
+      font-size: 18px;
+      color: #e44d26;
+      margin: 0 0 15px;
+      font-weight: bold;
+    }
+    .quantity-input {
+      margin: 15px 0;
       display: flex;
       align-items: center;
       gap: 10px;
-      background: none;
-      border: none;
-      padding: 10px;
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
+    }
+    .quantity-input label {
+      font-family: "Koulen", sans-serif;
+      font-size: 16px;
+      color: #555;
+    }
+    .quantity-input input {
+      padding: 8px;
+      width: 70px;
+      border: 1px solid #ddd;
+      border-radius: 25px;
       font-family: "Preahvihear", serif;
-      color: #333;
+      font-size: 16px;
+      text-align: center;
+      transition: border-color 0.3s;
     }
-    .dropdown-menu button:hover {
-      background: #f0f0f0;
+    .quantity-input input:focus {
+      border-color: #ff6f61;
+      outline: none;
     }
-    .notification {
+    .detail-actions {
+      margin-top: 15px;
+      display: flex;
+      justify-content:end;
+      align-item:center;
+    }
+    .view-cart-btn {
+      position: relative;
+    }
+    .cart-badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: #e44d26;
+      color: #fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-family: "Koulen", sans-serif;
+    }
+    .view-cart-btn.animate {
+      animation: bounce 0.5s;
+    }
+    .success-message {
       position: fixed;
       top: 20px;
       right: 20px;
@@ -759,11 +776,13 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
       color: #fff;
       padding: 10px 20px;
       border-radius: 5px;
-      z-index: 2000;
       font-family: "Koulen", sans-serif;
+      z-index: 1001;
+      transition: opacity 0.3s, transform 0.3s;
     }
-    .view-cart-btn.animate {
-      animation: bounce 0.5s;
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-20px); }
@@ -773,23 +792,16 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
       from { opacity: 0; transform: translateX(-20px); }
       to { opacity: 1; transform: translateX(0); }
     }
-    @keyframes slideInRight {
+    @keyframes fadeInRight {
       from { opacity: 0; transform: translateX(20px); }
       to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeOut {
-      to { opacity: 0; }
     }
     @keyframes bounce {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.2); }
     }
     @media (max-width: 768px) {
-      .cart-content {
+      .cart-content, .detail-content {
         padding: 20px;
         max-width: 95%;
       }
@@ -811,19 +823,34 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
       .cart-total {
         font-size: 18px;
       }
-      .checkout-btn {
-        font-size: 16px;
-        padding: 10px;
+      .checkout-btn, .ok-btn, .pdf-btn, .buy-now-btn, .edit-detail-btn, .delete-detail-btn {
+        font-size: 14px;
+        padding: 6px 15px;
       }
-      .notification {
+      .success-message {
         top: 10px;
         right: 10px;
         padding: 8px 15px;
         font-size: 14px;
       }
-      .dropdown-toggle {
-        font-size: 20px;
-        padding: 3px;
+      .detail-view {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+      }
+      .detail-view img {
+        width: 120px;
+        height: 120px;
+      }
+      .detail-image-wrapper {
+        width: 120px;
+        height: 120px;
+      }
+      .detail-name {
+        font-size: 18px;
+      }
+      .detail-price {
+        font-size: 16px;
       }
     }
     @media (max-width: 428px) {
@@ -840,20 +867,8 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
       .cart-item-quantity span {
         font-size: 12px;
       }
-      .receipt-content {
-        padding: 15px;
-      }
-      .receipt-actions {
-        flex-direction: column;
-        gap: 5px;
-      }
-      .okay-btn, .export-pdf-btn {
-        padding: 8px;
-        font-size: 14px;
-      }
-      .dropdown-toggle {
-        font-size: 18px;
-        padding: 2px;
+      .detail-header h2 {
+        font-size: 20px;
       }
     }
   `;
@@ -862,54 +877,56 @@ ${cart.map(item => `${item.name.replace(/%/g, '\\%')} & ${item.quantity} & ${ite
   // Initial render
   renderProducts();
   updateCartModal();
-});
+  updateCartBadge();
 
-// Function to toggle the menu visibility on mobile
-function toggleMenu() {
-  const menu = document.querySelector('.menu');
-  menu.classList.toggle('show'); // Toggle the 'show' class to display or hide the menu
-}
+  // Toggle menu for mobile
+  window.toggleMenu = function() {
+    const menu = document.querySelector('.menu');
+    menu.classList.toggle('show');
+  };
 
-// GSAP animations
-gsap.from('.footer-logo', {
-  opacity: 0,
-  y: -50,
-  duration: 1,
-  delay: 0.5
-});
+  // GSAP animations for footer
+  gsap.from('.footer-logo', {
+    opacity: 0,
+    y: -50,
+    duration: 1,
+    delay: 0.5
+  });
+  gsap.from('.footer-links', {
+    opacity: 0,
+    x: -50,
+    duration: 1,
+    delay: 0.7
+  });
+  gsap.from('.footer-social', {
+    opacity: 0,
+    x: 50,
+    duration: 1,
+    delay: 0.9
+  });
+  gsap.from('.footer-bottom', {
+    opacity: 0,
+    y: 50,
+    duration: 1,
+    delay: 1.1
+  });
 
-gsap.from('.footer-links', {
-  opacity: 0,
-  x: -50,
-  duration: 1,
-  delay: 0.7
-});
+  // Back to top button
+  const backToTop = document.getElementById("back-to-top");
+  window.onscroll = function() {
+    if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+      backToTop.style.display = "block";
+    } else {
+      backToTop.style.display = "none";
+    }
+  };
+  backToTop.addEventListener("click", function() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 
-gsap.from('.footer-social', {
-  opacity: 0,
-  x: 50,
-  duration: 1,
-  delay: 0.9
-});
-
-gsap.from('.footer-bottom', {
-  opacity: 0,
-  y: 50,
-  duration: 1,
-  delay: 1.1
-});
-
-// Back to Top Button visibility on scroll
-const backToTop = document.getElementById("back-to-top");
-
-window.onscroll = function () {
-  if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-    backToTop.style.display = "block";
-  } else {
-    backToTop.style.display = "none";
+  // Generate PDF (LaTeX content is in a separate artifact)
+  function generatePDF() {
+    console.log('Generating PDF with cart contents:', cart);
+    // LaTeX PDF generation is handled in the separate artifact
   }
-};
-
-backToTop.addEventListener("click", function () {
-  window.scrollTo({ top: 0, behavior: "smooth" });
 });
