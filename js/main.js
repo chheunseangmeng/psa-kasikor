@@ -121,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <button class="checkout-btn">បញ្ជាទិញ</button>
           <div class="checkout-actions" style="display: none; margin-top: 10px;">
             <button class="ok-btn">OK</button>
-            <button class="pdf-btn">Save as PDF</button>
           </div>
         </div>
       </div>
@@ -148,9 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.style.display = 'none';
       modal.querySelector('.checkout-btn').style.display = 'block';
       modal.querySelector('.checkout-actions').style.display = 'none';
-    });
-    modal.querySelector('.pdf-btn').addEventListener('click', () => {
-      generatePDF();
     });
 
     // Add event listener for cart actions only once
@@ -252,8 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <input type="text" id="product-name" required>
           <label>តម្លៃ (៛):</label>
           <input type="number" id="product-price" required>
-          <label>រូបភាព (URL):</label>
-          <input type="file" id="product-image" required>
+          <label>រូបភាព:</label>
+          <input type="file" id="product-image" accept="image/*" required>
           <button type="submit">រក្សាទុក</button>
         </form>
       </div>
@@ -344,10 +340,22 @@ document.addEventListener('DOMContentLoaded', () => {
       form.querySelector('#product-id').value = product.id;
       form.querySelector('#product-name').value = product.name;
       form.querySelector('#product-price').value = product.price;
-      form.querySelector('#product-image').value = product.image;
+      form.querySelector('#product-image').value = ''; // Clear file input
+      // Display existing image preview
+      let preview = form.querySelector('img');
+      if (!preview) {
+        preview = document.createElement('img');
+        preview.style.maxWidth = '100px';
+        preview.style.marginTop = '10px';
+        form.appendChild(preview);
+      }
+      preview.src = product.image;
     } else {
       form.reset();
       form.querySelector('#product-id').value = '';
+      // Remove any existing image preview
+      const existingPreview = form.querySelector('img');
+      if (existingPreview) existingPreview.remove();
     }
   }
 
@@ -356,28 +364,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const id = parseInt(productModal.querySelector('#product-id').value) || null;
     const name = productModal.querySelector('#product-name').value;
     const price = parseInt(productModal.querySelector('#product-price').value);
-    const image = productModal.querySelector('#product-image').value;
+    const fileInput = productModal.querySelector('#product-image');
+    const file = fileInput.files[0];
 
-    if (id) {
-      const productIndex = products.findIndex(p => p.id === id);
-      products[productIndex] = { id, name, price, image };
-      const cartItem = cart.find(item => item.id === id);
-      if (cartItem) {
-        cartItem.name = name;
-        cartItem.price = price;
-        cartItem.image = image;
+    // Function to save the product with the image URL
+    const saveWithImage = (imageUrl) => {
+      if (id) {
+        const productIndex = products.findIndex(p => p.id === id);
+        products[productIndex] = { id, name, price, image: imageUrl };
+        const cartItem = cart.find(item => item.id === id);
+        if (cartItem) {
+          cartItem.name = name;
+          cartItem.price = price;
+          cartItem.image = imageUrl;
+        }
+      } else {
+        const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
+        products.push({ id: newId, name, price, image: imageUrl });
       }
-    } else {
-      const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
-      products.push({ id: newId, name, price, image });
-    }
 
-    saveProducts();
-    saveCart();
-    renderProducts();
-    updateCartModal();
-    productModal.style.display = 'none';
-    showSuccessMessage(`${name} បានរក្សាទុកជោគជ័យ!`);
+      saveProducts();
+      saveCart();
+      renderProducts();
+      updateCartModal();
+      productModal.style.display = 'none';
+      showSuccessMessage(`${name} បានរក្សាទុកជោគជ័យ!`);
+    };
+
+    if (file) {
+      // Convert the selected file to a data URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target.result;
+        saveWithImage(imageUrl);
+      };
+      reader.readAsDataURL(file);
+    } else if (id) {
+      // If editing and no new file is selected, keep the existing image
+      const product = products.find(p => p.id === id);
+      saveWithImage(product.image);
+    } else {
+      // If adding a new product without an image, show an error
+      showSuccessMessage('សូមជ្រើសរើសរូបភាពផលិតផល!');
+      return;
+    }
   }
 
   // Delete product
@@ -754,15 +784,15 @@ document.addEventListener('DOMContentLoaded', () => {
       position: absolute;
       top: -10px;
       right: -10px;
-      background: #e44d26;
+      background: 	#4CBB17 ;
       color: #fff;
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 30px;
+      height: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 18px;
       font-family: "Koulen", sans-serif;
     }
     .view-cart-btn.animate {
