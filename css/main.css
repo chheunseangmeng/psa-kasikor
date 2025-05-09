@@ -271,7 +271,6 @@ footer {
 .social-icons a:hover {
   color: #f39c12;
 }
-
 /* Mobile Menu */
 @media screen and (max-width: 768px) {
   nav {

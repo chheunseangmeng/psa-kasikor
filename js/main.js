@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class="cart-total">សរុប: 0 ៛</p>
           <button class="checkout-btn">បញ្ជាទិញ</button>
           <div class="checkout-actions" style="display: none; margin-top: 10px;">
-            <button class="ok-btn">OK</button>
+            <button class="ok-btn">ទិញរួចរាល់</button>
           </div>
         </div>
       </div>
