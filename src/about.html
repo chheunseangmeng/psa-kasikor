@@ -5,42 +5,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>អំពីយើង - ផ្សារកសិករ</title>
 
-    <!-- Link to external styles and scripts -->
-    <link rel="stylesheet" href="../css/main.css" />
-    <script src="../js/history.js" defer></script>
-    <script src="../js/main.js" defer></script>
-
     <!-- Bootstrap CSS -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
 
-    <!-- Bootstrap JS -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
-
+    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
+
+    <!-- AOS for animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/main.css" />
+
     <style>
-      span {
-        background: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        color: #019801;
-        border-bottom: 3px solid #019801;
-        width: 100%;
-        margin-top: 30px;
+      /* General Styles */
+      body {
+        font-family: "Preahvihear", serif;
+        line-height: 1.6;
+        background-color: #f8f9fa;
       }
-      span i {
-        font-size: 25px;
+
+      /* Increase navbar font size */
+      .navbar-nav .nav-link {
+        font-size: 1.25rem;
+      }
+
+      /* Hero Section */
+      .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+          url("../img/kasikor.jpg") no-repeat center/cover;
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+        position: relative;
+      }
+
+      .hero-section h1 {
+        font-family: "Koulen", sans-serif;
+        font-size: 3rem;
+        text-decoration: underline 4px greenyellow;
+      }
+
+      .hero-section p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* About Section */
+      .about-section {
+        padding: 60px 0;
+      }
+
+      .about-section h2 {
+        font-family: "Koulen", sans-serif;
+        color: #019801;
+        margin-bottom: 20px;
+      }
+
+      .about-section p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+      }
+      .inline-bullets li{
+        list-style-type:square;
+      }
+      /* Why Choose Us Cards */
+      .feature-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-bottom: 3px solid #019801;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .feature-card i {
+        font-size: 2rem;
+        color: #019801;
+        margin-bottom: 10px;
+      }
+
+      /* Testimonial Carousel */
+      .testimonial-section {
+        background: #e9ecef;
+        padding: 60px 0;
+      }
+
+      .testimonial-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        margin: 0 10px;
+      }
+
+      .testimonial-card img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 15px;
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .hero-section h1 {
+          font-size: 2rem;
+        }
+
+        .hero-section p {
+          font-size: 1rem;
+        }
+
+        .about-section h2 {
+          font-size: 1.5rem;
+        }
+
+        .feature-card {
+          margin-bottom: 20px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .hero-section {
+          padding: 60px 0;
+        }
+
+        .footer-container {
+          flex-direction: column;
+          text-align: center;
+        }
       }
     </style>
   </head>
@@ -98,105 +203,164 @@
     </header>
 
     <main>
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="container">
+          <h1 data-aos="fade-up">អំពីពួកយើង</h1>
+          <p data-aos="fade-up" data-aos-delay="200">
+            ស្វែងយល់ពីបេសកកម្មរបស់យើងក្នុងការគាំទ្រកសិករកម្ពុជា
+            និងផ្តល់ផលិតផលធម្មជាតិដល់អតិថិជន!
+          </p>
+        </div>
+      </section>
+
+      <!-- About Section -->
       <section class="about-section">
         <div class="container">
-          <h1
-            class="text-center mb-5 mt-5"
-            style="
-              font-family: 'Koulen', sans-serif;
-              text-decoration: underline 4px greenyellow;
-            "
-          >
-            អំពីពួកយើង
-          </h1>
-          <div class="row">
-            <div class="col-md-6 mb-4">
-              <h2 style="font-family: 'Koulen', sans-serif">បេសកកម្មរបស់យើង</h2>
-              <p
-                style="
-                  font-family: 'Preahvihear', serif;
-                  font-size: 18px;
-                  line-height: 1.8;
-                "
-              >
-              ផ្សារកសិករ
-              ជាវេទិកាឌីជីថលសម្រាប់កសិករកម្ពុជាលក់ផ្ទាល់ផលិតផលធម្មជាតិទៅកាន់អតិថិជន ដោយគ្មានអ្នកលក់កណ្តាល។ វាជួយលើកកម្ពស់ជីវភាពកសិករ បង្កើនប្រាក់ចំណូល និងផ្ដល់ផលិតផលស្រស់ មានសុវត្ថិភាព និងគុណភាពខ្ពស់ដល់អតិថិជន។
-              
-              វេបសាយនេះមានមុខងារ៖
-              
-              បង្ហោះផលិតផលអនឡាញ
-              
-              ទំនាក់ទំនងផ្ទាល់ជាមួយអតិថិជន
-              
-              គាំទ្រការបង់ប្រាក់ និងដឹកជញ្ជូន
-              
-              ផ្ដល់ចំណេះដឹងអំពីកសិកម្ម
-              
-              ផ្សារកសិករ ជាជម្រើសដ៏ល្អសម្រាប់អ្នកចូលចិត្តផលិតផលក្នុងស្រុក និងចង់គាំទ្រកសិករខ្មែរ។
+          <div class="row align-items-center">
+            <div class="col-md-6 mb-4" data-aos="fade-right">
+              <h2>បេសកកម្មរបស់យើង</h2>
+              <p>
+                ផ្សារកសិករ
+                ជាវេទិកាឌីជីថលសម្រាប់កសិករកម្ពុជាលក់ផ្ទាល់ផលិតផលធម្មជាតិទៅកាន់អតិថិជន
+                ដោយគ្មានអ្នកលក់កណ្តាល។ វាជួយលើកកម្ពស់ជីវភាពកសិករ
+                បង្កើនប្រាក់ចំណូល និងផ្ដល់ផលិតផលស្រស់ មានសុវត្ថិភាព
+                និងគុណភាពខ្ពស់ដល់អតិថិជន។
               </p>
+              <ul class="inline-bullets">
+                <li>បង្ហោះផលិតផលអនឡាញ</li>
+                <li>ទំនាក់ទំនងផ្ទាល់ជាមួយអតិថិជន</li>
+                <li>គាំទ្រការបង់ប្រាក់ និងដឹកជញ្ជូន</li>
+                <li>ផ្ដល់ចំណេះដឹងអំពីកសិកម្ម</li>
+              </ul>
             </div>
-            <div class="col-md-6 mb-4">
+            <div class="col-md-6 mb-4" data-aos="fade-left">
               <img
                 src="../img/kasikor.jpg"
                 alt="Cambodian farmers working"
                 class="img-fluid rounded"
-                style="width: 90%; height: auto"
+                style="width: 100%; height: auto; object-fit: cover"
+                loading="lazy"
               />
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-12 mb-4">
-              <h2 style="font-family: 'Koulen', sans-serif;text-align: center;margin-top: 50px;">
-                ហេតុអ្វីជ្រើសរើសយើង?
-              </h2>
-              <ul
-                style="
-                  font-family: 'Preahvihear', serif;
-                  font-size: 18px;
-                  line-height: 2;
-                  text-align: center;
-                "
-              >
-                <span
-                  ><li>
-                    <i class="fas fa-leaf me-2"></i> <br />
-                    ផលិតផលធម្មជាតិ 100% ពីកសិករក្នុងស្រុក
-                  </li></span
-                >
-                <span
-                  ><li>
-                    <i class="fas fa-truck me-2"></i> <br />
-                    ដឹកជញ្ជូនរហ័ស និងអាចទុកចិត្តបាន
-                  </li></span
-                >
-                <span
-                  ><li>
-                    <i class="fas fa-users me-2"></i> <br />
-                    គាំទ្រសហគមន៍កសិករកម្ពុជា
-                  </li></span
-                >
-                <span
-                  ><li>
-                    <i class="fas fa-star me-2"></i> <br />
-                    គុណភាពខ្ពស់ តម្លៃសមរម្យ
-                  </li></span
-                >
-              </ul>
+
+          <!-- Why Choose Us -->
+          <h2 class="text-center mt-5">ហេតុអ្វីជ្រើសរើសយើង?</h2>
+          <div class="row mt-4">
+            <div class="col-md-3 col-sm-6 mb-4" data-aos="zoom-in">
+              <div class="feature-card">
+                <i class="fas fa-leaf"></i>
+                <h5>ផលិតផលធម្មជាតិ</h5>
+                <p>100% ពីកសិករក្នុងស្រុក</p>
+              </div>
+            </div>
+            <div
+              class="col-md-3 col-sm-6 mb-4"
+              data-aos="zoom-in"
+              data-aos-delay="100"
+            >
+              <div class="feature-card">
+                <i class="fas fa-truck"></i>
+                <h5>ដឹកជញ្ជូនរហ័ស</h5>
+                <p>អាចទុកចិត្តបាន</p>
+              </div>
+            </div>
+            <div
+              class="col-md-3 col-sm-6 mb-4"
+              data-aos="zoom-in"
+              data-aos-delay="200"
+            >
+              <div class="feature-card">
+                <i class="fas fa-users"></i>
+                <h5>គាំទ្រសហគមន៍</h5>
+                <p>កសិករកម្ពុជា</p>
+              </div>
+            </div>
+            <div
+              class="col-md-3 col-sm-6 mb-4"
+              data-aos="zoom-in"
+              data-aos-delay="300"
+            >
+              <div class="feature-card">
+                <i class="fas fa-star"></i>
+                <h5>គុណភាពខ្ពស់</h5>
+                <p>តម្លៃសមរម្យ</p>
+              </div>
             </div>
           </div>
-          <div class="text-center mb-5">
+
+          <div class="text-center mt-5">
             <a
               href="../index.html"
               class="btn btn-primary"
               style="
                 background: orangered;
                 border: none;
+                padding: 12px 30px;
                 font-family: 'Koulen', sans-serif;
-                padding: 10px 20px;
               "
+              >ស្វែងរកផលិតផលឥឡូវនេះ</a
             >
-              ស្វែងរកផលិតផលឥឡូវនេះ
-            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonial Section -->
+      <section class="testimonial-section">
+        <div class="container">
+          <h2 class="text-center mb-5" data-aos="fade-up">មតិពីអតិថិជន</h2>
+          <div
+            id="testimonialCarousel"
+            class="carousel slide"
+            data-bs-ride="carousel"
+          >
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <div class="testimonial-card" data-aos="fade-up">
+                  <img src="../img/liyaa.jpg" alt="Customer 1" loading="lazy" />
+                  <p>
+                    "ផលិតផលស្រស់ និងគុណភាពខ្ពស់! ខ្ញុំចូលចិត្តគាំទ្រកសិករខ្មែរ។"
+                  </p>
+                  <h5>លីយ៉ា​​ បាត់ដំបង</h5>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <div class="testimonial-card" data-aos="fade-up">
+                  <img
+                    src="../img/my-profile.png"
+                    alt="Customer 2"
+                    loading="lazy"
+                  />
+                  <p>"ការដឹកជញ្ជូនរហ័ស និងសេវាកម្មល្អឥតខ្ចោះ!"</p>
+                  <h5>សៀងម៉េង​​ កំពង់ធំ</h5>
+                </div>
+              </div>
+            </div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#testimonialCarousel"
+              data-bs-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#testimonialCarousel"
+              data-bs-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Next</span>
+            </button>
           </div>
         </div>
       </section>
@@ -206,7 +370,7 @@
       <div class="footer-container">
         <div class="footer-logo">
           <h2 class="navbar-brand">ផ្សារកសិករ</h2>
-          <p>" បន្លែស្រស់ ដឹកដល់មាត់ទ្វារផ្ទះរបស់បងប្អូនកម្ពុជា "</p>
+          <p>"បន្លែស្រស់ ដឹកដល់មាត់ទ្វារផ្ទះរបស់បងប្អូនកម្ពុជា"</p>
         </div>
         <div class="footer-links">
           <h4>ទំនាក់ទំនងឆាប់រហ័ស</h4>
@@ -229,5 +393,25 @@
       </div>
       <div class="phone-number">+855 68 000 000</div>
     </footer>
+
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+        once: true,
+      });
+    </script>
+
+    <!-- External Scripts -->
+    <script src="../js/history.js" defer></script>
+    <script src="../js/main.js" defer></script>
   </body>
 </html>

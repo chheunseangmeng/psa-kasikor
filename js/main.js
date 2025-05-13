@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: 10, name: 'ល្ពៅ (ធម្មជាតិ)', price: 3000, image: './img/Lapov.png' },
     { id: 11, name: 'ទំពាំងបាយជូរ (ធម្មជាតិ)', price: 3000, image: './img/grape.jpg' },
     { id: 12, name: 'ប៉ោម (ធម្មជាតិ)', price: 3000, image: './img/apple.png' },
-    { id: 13, name: 'ននោង (ធម្មជាតិ)', price: 3000, image: './img/nornong =.webp' },
+    { id: 13, name: 'ននោង (ធម្មជាតិ)', price: 3000, image: './img/nornong.webp' },
     { id: 14, name: 'ក្រូច (ធម្មជាតិ)', price: 3000, image: './img/orange.jpg' },
     { id: 15, name: 'ឪឡឹក (ធម្មជាតិ)', price: 3000, image: './img/watermelon.jpg' },
     { id: 16, name: 'ម្ឃុត (ធម្មជាតិ)', price: 3000, image: './img/makhot.jpg' }
@@ -26,10 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const cartModal = createCartModal();
   const productModal = createProductModal();
   const detailModal = createDetailModal();
+  const historyModal = createHistoryModal();
   const successMessage = createSuccessMessage();
   document.body.appendChild(cartModal);
   document.body.appendChild(productModal);
   document.body.appendChild(detailModal);
+  document.body.appendChild(historyModal);
   document.body.appendChild(successMessage);
 
   // Render products
@@ -66,13 +68,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Add to cart with success message
-  function addToCart(productId) {
+  function addToCart(productId, quantity = 1) {
     const product = products.find(p => p.id === productId);
     const cartItem = cart.find(item => item.id === productId);
     if (cartItem) {
-      cartItem.quantity += 1;
+      cartItem.quantity += quantity;
     } else {
-      cart.push({ ...product, quantity: 1 });
+      cart.push({ ...product, quantity });
     }
     saveCart();
     updateCartModal();
@@ -140,6 +142,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
     modal.querySelector('.ok-btn').addEventListener('click', () => {
+      // Save order to history
+      const orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
+      orderHistory.push({
+        date: new Date().toISOString(),
+        items: [...cart],
+        total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+      });
+      localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+      // Clear cart
       cart = [];
       saveCart();
       updateCartModal();
@@ -149,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.querySelector('.checkout-actions').style.display = 'none';
     });
 
-    // Add event listener for cart actions only once
+    // Add event listener for cart actions
     const cartItemsContainer = modal.querySelector('.cart-items');
     cartItemsContainer.addEventListener('click', (e) => {
       const target = e.target;
@@ -317,6 +328,83 @@ document.addEventListener('DOMContentLoaded', () => {
     return modal;
   }
 
+  // Create history modal
+  function createHistoryModal() {
+    const modal = document.createElement('div');
+    modal.classList.add('modal', 'history-modal');
+    modal.style.display = 'none';
+    modal.innerHTML = `
+      <div class="modal-content history-content">
+        <span class="close-history">×</span>
+        <h2>ប្រវត្តិការលក់</h2>
+        <div class="history-items"></div>
+        <div class="history-actions">
+          <button class="close-btn">បិទ</button>
+        </div>
+      </div>
+    `;
+    modal.querySelector('.close-history').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    modal.querySelector('.close-btn').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    return modal;
+  }
+
+  // Update history modal with card-based UI
+  function updateHistoryModal() {
+    const historyItemsContainer = historyModal.querySelector('.history-items');
+    const orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
+    historyItemsContainer.innerHTML = '';
+    if (orderHistory.length === 0) {
+      historyItemsContainer.innerHTML = '<p style="font-family: \'Preahvihear\', serif; text-align: center;">មិនមានប្រវត្តិការលក់ទេ!</p>';
+    } else {
+      orderHistory.forEach((order, index) => {
+        const card = document.createElement('div');
+        card.classList.add('history-card');
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.innerHTML = `
+          <div class="history-card-header">
+            <h3>ការបញ្ជាទិញ #${index + 1}</h3>
+            <button class="delete-history-btn" data-index="${index}"><i class="fas fa-trash-alt"></i></button>
+          </div>
+          <p class="history-date">កាលបរិច្ឆេទ: ${new Date(order.date).toLocaleString('km-KH')}</p>
+          <ul class="history-item-list">
+            ${order.items.map(item => `
+              <li>
+                <span>${item.name}</span>
+                <span>x${item.quantity}</span>
+                <span>${item.price * item.quantity} ៛</span>
+              </li>
+            `).join('')}
+          </ul>
+          <p class="history-total">សរុប: ${order.total} ៛</p>
+        `;
+        historyItemsContainer.appendChild(card);
+      });
+
+      // Add delete event listeners
+      historyItemsContainer.querySelectorAll('.delete-history-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.currentTarget.dataset.index);
+          deleteHistoryItem(index);
+        });
+      });
+    }
+  }
+
+  // Delete a history item
+  function deleteHistoryItem(index) {
+    if (confirm('តើអ្នកប្រាកដជាចង់លុបការបញ្ជាទិញនេះមែនទេ?')) {
+      const orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
+      orderHistory.splice(index, 1);
+      localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+      updateHistoryModal();
+      showSuccessMessage('បានលុបការបញ្ជាទិញជោគជ័យ!');
+    }
+  }
+
   // Open detail modal
   function openDetailModal(productId) {
     const product = products.find(p => p.id === productId);
@@ -340,8 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
       form.querySelector('#product-id').value = product.id;
       form.querySelector('#product-name').value = product.name;
       form.querySelector('#product-price').value = product.price;
-      form.querySelector('#product-image').value = ''; // Clear file input
-      // Display existing image preview
+      form.querySelector('#product-image').value = '';
       let preview = form.querySelector('img');
       if (!preview) {
         preview = document.createElement('img');
@@ -353,7 +440,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       form.reset();
       form.querySelector('#product-id').value = '';
-      // Remove any existing image preview
       const existingPreview = form.querySelector('img');
       if (existingPreview) existingPreview.remove();
     }
@@ -367,7 +453,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileInput = productModal.querySelector('#product-image');
     const file = fileInput.files[0];
 
-    // Function to save the product with the image URL
     const saveWithImage = (imageUrl) => {
       if (id) {
         const productIndex = products.findIndex(p => p.id === id);
@@ -382,7 +467,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
         products.push({ id: newId, name, price, image: imageUrl });
       }
-
       saveProducts();
       saveCart();
       renderProducts();
@@ -392,7 +476,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (file) {
-      // Convert the selected file to a data URL
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target.result;
@@ -400,11 +483,9 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       reader.readAsDataURL(file);
     } else if (id) {
-      // If editing and no new file is selected, keep the existing image
       const product = products.find(p => p.id === id);
       saveWithImage(product.image);
     } else {
-      // If adding a new product without an image, show an error
       showSuccessMessage('សូមជ្រើសរើសរូបភាពផលិតផល!');
       return;
     }
@@ -440,6 +521,12 @@ document.addEventListener('DOMContentLoaded', () => {
     openProductModal();
   });
 
+  // Create button container for cart and history buttons
+  const buttonContainer = document.createElement('div');
+  buttonContainer.style.display = 'flex';
+  buttonContainer.style.gap = '10px';
+  buttonContainer.style.alignItems = 'center';
+
   // View cart button with badge
   const cartButton = document.createElement('button');
   cartButton.classList.add('view-cart-btn');
@@ -453,12 +540,41 @@ document.addEventListener('DOMContentLoaded', () => {
   cartButton.style.cursor = 'pointer';
   cartButton.style.fontFamily = '"Koulen", sans-serif';
   cartButton.style.position = 'relative';
-  document.querySelector('.second-main').appendChild(cartButton);
+
+  // History button
+  const historyButton = document.createElement('button');
+  historyButton.classList.add('history-btn');
+  historyButton.innerHTML = 'ប្រវត្តិការលក់';
+  historyButton.style.margin = '10px';
+  historyButton.style.padding = '10px 20px';
+  historyButton.style.background = '#2b3b67';
+  historyButton.style.color = '#fff';
+  historyButton.style.border = 'none';
+  historyButton.style.borderRadius = '5px';
+  historyButton.style.cursor = 'pointer';
+  historyButton.style.fontFamily = '"Koulen", sans-serif';
+
+  // Append buttons to container
+  buttonContainer.appendChild(cartButton);
+  buttonContainer.appendChild(historyButton);
+
+  // Append container to .second-main
+  document.querySelector('.second-main').appendChild(buttonContainer);
+
+  // Cart button event listener
   cartButton.addEventListener('click', () => {
     updateCartModal();
     cartModal.style.display = 'flex';
     cartModal.classList.add('modal-animate');
     setTimeout(() => cartModal.classList.remove('modal-animate'), 300);
+  });
+
+  // History button event listener
+  historyButton.addEventListener('click', () => {
+    updateHistoryModal();
+    historyModal.style.display = 'flex';
+    historyModal.classList.add('modal-animate');
+    setTimeout(() => historyModal.classList.remove('modal-animate'), 300);
   });
 
   // Search functionality
@@ -486,7 +602,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .modal-animate .modal-content {
       animation: zoomIn 0.4s ease;
     }
-    .cart-content, .detail-content {
+    .cart-content, .detail-content, .history-content {
       background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
       padding: 30px;
       max-width: 600px;
@@ -496,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
       border-radius: 15px;
       border: 1px solid #e0e0e0;
     }
-    .close-cart, .close-product, .close-detail {
+    .close-cart, .close-product, .close-detail, .close-history {
       position: absolute;
       top: 15px;
       right: 20px;
@@ -505,10 +621,10 @@ document.addEventListener('DOMContentLoaded', () => {
       color: #555;
       transition: color 0.3s;
     }
-    .close-cart:hover, .close-product:hover, .close-detail:hover {
+    .close-cart:hover, .close-product:hover, .close-detail:hover, .close-history:hover {
       color: #000;
     }
-    .cart-items {
+    .cart-items, .history-items {
       max-height: 400px;
       overflow-y: auto;
       margin-bottom: 20px;
@@ -576,7 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
       font-family: "Koulen", sans-serif;
       color: #333;
     }
-    .checkout-btn, .ok-btn, .pdf-btn, .buy-now-btn, .edit-detail-btn, .delete-detail-btn {
+    .checkout-btn, .ok-btn, .buy-now-btn, .edit-detail-btn, .delete-detail-btn, .close-btn {
       border: none;
       padding: 8px 20px;
       border-radius: 25px;
@@ -589,29 +705,24 @@ document.addEventListener('DOMContentLoaded', () => {
       background: linear-gradient(90deg, #ff6f61, #ff8a65);
       color: #fff;
     }
-    .buy-now-btn{
-        width: 170px;
+    .buy-now-btn {
+      width: 170px;
     }
-    .ok-btn {
+    .ok-btn, .close-btn {
       background: linear-gradient(90deg, #1e90ff, #00b7eb);
       color: #fff;
     }
-    .pdf-btn {
-      background: linear-gradient(90deg, #28a745, #34c759);
-      color: #fff;
-    }
-    .checkout-btn:hover, .ok-btn:hover, .pdf-btn:hover, .buy-now-btn:hover {
+    .checkout-btn:hover, .ok-btn:hover, .buy-now-btn:hover, .close-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
     .edit-detail-btn {
-      background:none;
+      background: none;
       color: #000;
     }
     .delete-detail-btn {
-      color:#ff4d4d;
-      background:none;
-      
+      color: #ff4d4d;
+      background: none;
     }
     .edit-detail-btn:hover, .delete-detail-btn:hover {
       transform: translateY(-2px);
@@ -622,6 +733,11 @@ document.addEventListener('DOMContentLoaded', () => {
       justify-content: flex-end;
       gap: 10px;
     }
+    .history-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
     .modal-content {
       background: #fff;
       padding: 20px;
@@ -630,8 +746,8 @@ document.addEventListener('DOMContentLoaded', () => {
       position: relative;
       border-radius: 10px;
     }
-    .sale{
-      border-radius:0;
+    .sale {
+      border-radius: 0;
       border-top-right-radius: 10px;
       border-bottom-right-radius: 10px;
     }
@@ -678,12 +794,12 @@ document.addEventListener('DOMContentLoaded', () => {
       left: 25%;
       border-radius: 2px;
     }
-      h2{
-        font-family: "Koulen", sans-serif;
-        text-align: center;
-      }
-    .detail-content{
-      border-radius:0;
+    h2 {
+      font-family: "Koulen", sans-serif;
+      text-align: center;
+    }
+    .detail-content {
+      border-radius: 0;
       border-top-right-radius: 10px;
       border-bottom-right-radius: 10px;
     }
@@ -693,8 +809,8 @@ document.addEventListener('DOMContentLoaded', () => {
       align-items: center;
       background: #fff;
       padding: 20px;
-      justify-content:center;
-      align-item:center;
+      justify-content: center;
+      align-items: center;
     }
     .detail-image-wrapper {
       position: relative;
@@ -774,17 +890,17 @@ document.addEventListener('DOMContentLoaded', () => {
     .detail-actions {
       margin-top: 15px;
       display: flex;
-      justify-content:end;
-      align-item:center;
+      justify-content: end;
+      align-items: center;
     }
-    .view-cart-btn {
+    .view-cart-btn, .history-btn {
       position: relative;
     }
     .cart-badge {
       position: absolute;
       top: -10px;
       right: -10px;
-      background: 	#4CBB17 ;
+      background: #4CBB17;
       color: #fff;
       border-radius: 50%;
       width: 30px;
@@ -810,6 +926,71 @@ document.addEventListener('DOMContentLoaded', () => {
       z-index: 1001;
       transition: opacity 0.3s, transform 0.3s;
     }
+    .history-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: slideIn 0.3s ease forwards;
+    }
+    .history-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+    .history-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .history-card-header h3 {
+      font-family: "Koulen", sans-serif;
+      font-size: 18px;
+      color: #333;
+      margin: 0;
+    }
+    .delete-history-btn {
+      background: none;
+      border: none;
+      color: #ff4d4d;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .delete-history-btn:hover {
+      color: #e63939;
+      transform: scale(1.2);
+    }
+    .history-date {
+      font-family: "Preahvihear", serif;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .history-item-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px 0;
+    }
+    .history-item-list li {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-family: "Preahvihear", serif;
+      font-size: 14px;
+      color: #333;
+    }
+    .history-total {
+      font-family: "Koulen", sans-serif;
+      font-size: 16px;
+      color: #e44d26;
+      text-align: right;
+      margin: 0;
+    }
     @keyframes zoomIn {
       from { opacity: 0; transform: scale(0.8); }
       to { opacity: 1; transform: scale(1); }
@@ -831,7 +1012,7 @@ document.addEventListener('DOMContentLoaded', () => {
       50% { transform: scale(1.2); }
     }
     @media (max-width: 768px) {
-      .cart-content, .detail-content {
+      .cart-content, .detail-content, .history-content {
         padding: 20px;
         max-width: 95%;
       }
@@ -853,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .cart-total {
         font-size: 18px;
       }
-      .checkout-btn, .ok-btn, .pdf-btn, .buy-now-btn, .edit-detail-btn, .delete-detail-btn {
+      .checkout-btn, .ok-btn, .buy-now-btn, .edit-detail-btn, .delete-detail-btn, .close-btn {
         font-size: 14px;
         padding: 6px 15px;
       }
@@ -882,6 +1063,12 @@ document.addEventListener('DOMContentLoaded', () => {
       .detail-price {
         font-size: 16px;
       }
+      .history-card-header h3 {
+        font-size: 16px;
+      }
+      .history-date, .history-item-list li, .history-total {
+        font-size: 13px;
+      }
     }
     @media (max-width: 428px) {
       .cart-item {
@@ -900,6 +1087,12 @@ document.addEventListener('DOMContentLoaded', () => {
       .detail-header h2 {
         font-size: 20px;
       }
+      .history-card {
+        padding: 10px;
+      }
+      .view-cart-btn, .history-btn {
+        width:130px;
+    }
     }
   `;
   document.head.appendChild(style);
@@ -953,10 +1146,4 @@ document.addEventListener('DOMContentLoaded', () => {
   backToTop.addEventListener("click", function() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
-
-  // Generate PDF (LaTeX content is in a separate artifact)
-  function generatePDF() {
-    console.log('Generating PDF with cart contents:', cart);
-    // LaTeX PDF generation is handled in the separate artifact
-  }
 });

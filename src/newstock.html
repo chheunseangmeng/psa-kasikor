@@ -2,13 +2,8 @@
 <html lang="km">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ទំនិញថ្មីៗ - ផ្សារកសិករ</title>
-
-    <!-- Link to external styles and scripts -->
-    <link rel="stylesheet" href="../css/main.css" />
-    <script src="../js/history.js" defer></script>
-    <script src="../js/main.js" defer></script>
 
     <!-- Bootstrap CSS -->
     <link
@@ -18,14 +13,297 @@
       crossorigin="anonymous"
     />
 
-    <!-- Bootstrap JS -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- Link to external styles -->
+    <link rel="stylesheet" href="../css/main.css" />
+
+  <style>
+  body {
+    font-family: "Preahvihear", serif;
+    background-color: #f5f7fa;
+    color: #333;
+  }
+
+  /* Increase navbar font size for consistency */
+  .main-nav .nav-link {
+    font-size: 1.25rem;
+    color: #666;
+  }
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+  .navbar-brand {
+    font-family: "Moul", serif;
+    color: #00ca00 !important;
+  }
+  .active {
+    color: #00ca00 !important;
+  }
+  ul {
+    display: flex;
+    gap: 30px;
+    margin-left: 0;
+    list-style-type: none;
+  }
+  ul li a {
+    font-family: "Koulen", sans-serif;
+    text-decoration: none;
+    font-size: 20px;
+  }
+  /* Hamburger Icon */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+  }
+  .hamburger .bar {
+    width: 30px;
+    height: 4px;
+    background-color: #00ca00;
+    border-radius: 5px;
+  }
+  /* Hide the menu on mobile by default */
+  .menu {
+    display: flex;
+    gap: 30px;
+  }
+  .menu li {
+    display: block;
+  }
+  .menu.show {
+    display: flex;
+  }
+  .new-stock-section {
+    padding: 30px 0;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    height: 57vh;
+  }
+
+  .second-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .second-main h2 {
+    font-family: "Koulen", sans-serif;
+    color: #019801;
+    font-size: 2rem;
+    margin: 0;
+  }
+  .input-search input {
+    padding: 12px;
+    width: 300px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    outline: none;
+  }
+
+  .input-search input:focus {
+    border-color: #019801;
+    box-shadow: 0 0 5px rgba(1, 152, 1, 0.3);
+  }
+
+  .content-img {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+  }
+
+  .item-card {
+    background: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    max-width: 350px;
+  }
+
+  .item-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background: #f9f9f9;
+  }
+
+  .item-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: opacity 0.3s;
+  }
+
+  .item-card:hover img {
+    opacity: 0.9;
+  }
+
+  .item-card-body {
+    padding: 20px;
+    text-align: center;
+    background: #fff;
+  }
+
+  .item-card-body h5 {
+    font-family: "Koulen", sans-serif;
+    color: #019801;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .item-card-body p {
+    margin: 0;
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .card-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 12px;
+    z-index: 1;
+  }
+
+  .card-actions i {
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-actions i:hover {
+    transform: scale(1.1);
+    background: #fff;
+  }
+
+  .card-actions .fa-edit {
+    color: #019801;
+  }
+
+  .card-actions .fa-trash {
+    color: #dc3545;
+  }
+
+  /* Modal Styling */
+  .modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .modal-header {
+    background: #019801;
+    color: white;
+    border-radius: 15px 15px 0 0;
+  }
+
+  .modal-title {
+    font-family: "Koulen", sans-serif;
+    font-size: 1.5rem;
+  }
+
+  .modal-body img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Add Product Form */
+  #addProductForm {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  #addProductForm .form-label {
+    font-family: "Koulen", sans-serif;
+    color: #019801;
+    font-size: 1.1rem;
+  }
+
+  #addProductForm .form-control {
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    padding: 10px;
+    transition: border-color 0.3s;
+  }
+
+  #addProductForm .form-control:focus {
+    border-color: #019801;
+    box-shadow: 0 0 5px rgba(1, 152, 1, 0.3);
+  }
+
+  #addProductForm .btn {
+    background: orangered;
+    border: none;
+    font-family: "Koulen", sans-serif;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: background 0.3s;
+  }
+
+  #addProductForm .btn:hover {
+    background: #ff4500;
+  }
+
+  @media (max-width: 768px) {
+    .second-main {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .input-search {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .input-search input {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .content-img {
+      padding: 10px;
+    }
+
+    .item-card {
+      width: 100%;
+      max-width: none;
+    }
+  }
+</style>
   </head>
   <body>
     <header>
@@ -47,7 +325,7 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+            <ul class="main-nav ms-auto">
               <li class="nav-item">
                 <a class="nav-link" href="../index.html">ទំព័រដើម</a>
               </li>
@@ -55,10 +333,23 @@
                 <a class="nav-link" href="../src/about.html">អំពីយើង</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="./new-stock.html" aria-current="page">ទំនិញថ្មីៗ</a>
+                <a class="nav-link active" href="#" aria-current="page"
+                  >ទំនិញថ្មីៗ</a
+                >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" id="enroll" style="text-decoration: underline 3px greenyellow;color: orangered;">បញ្ចូលទំនិញថ្មី</a>
+                <a
+                  class="nav-link"
+                  href="#"
+                  id="enroll"
+                  data-bs-toggle="modal"
+                  data-bs-target="#addProductModal"
+                  style="
+                    text-decoration: underline 3px greenyellow;
+                    color: orangered;
+                  "
+                  >បញ្ចូលទំនិញថ្មី</a
+                >
               </li>
             </ul>
           </div>
@@ -70,7 +361,7 @@
       <section class="new-stock-section">
         <div class="container">
           <div class="second-main">
-            <h2 style="font-family: 'Koulen', sans-serif;">ទំនិញទើបចូលស្តុកថ្មីៗ</h2>
+            <h2>ទំនិញទើបចូលស្តុកថ្មីៗ</h2>
             <div class="input-search">
               <input
                 type="search"
@@ -80,21 +371,198 @@
               />
             </div>
           </div>
-          <div class="d-flex justify-content-end align-item-center me-5">
-          <button class="btn btn-secondary mt-3 history-btn" style="background: #2b3b67; border: none; font-family: 'Koulen', sans-serif; padding: 10px 20px;margin-right: 15px;">
-            ប្រវត្តិការលក់
-          </button>
-        </div>
-          <div class="content-img"></div>
+          <div class="content-img" id="productContainer"></div>
         </div>
       </section>
     </main>
+
+    <!-- Product Detail Modal -->
+    <div
+      class="modal fade"
+      id="productDetailModal"
+      tabindex="-1"
+      aria-labelledby="productDetailModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="productDetailModalLabel"></h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <img id="productDetailImage" src="" alt="Product Image" />
+            <p>
+              <strong>ប្រភព:</strong> <span id="productDetailSource"></span>
+            </p>
+            <p>
+              <strong>ពិពណ៌នា:</strong>
+              <span id="productDetailDescription"></span>
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              បិទ
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div
+      class="modal fade"
+      id="addProductModal"
+      tabindex="-1"
+      aria-labelledby="addProductModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addProductModalLabel">
+              បញ្ចូលទំនិញថ្មី
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addProductForm">
+              <div class="mb-3">
+                <label for="productName" class="form-label">ឈ្មោះទំនិញ</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="productName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="productSource" class="form-label">ប្រភព</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="productSource"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="productImage" class="form-label">រូបភាព</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="productImage"
+                  accept="image/*"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="productDescription" class="form-label"
+                  >ពិពណ៌នា</label
+                >
+                <textarea
+                  class="form-control"
+                  id="productDescription"
+                  rows="4"
+                  required
+                ></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">បញ្ចូល</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div
+      class="modal fade"
+      id="editProductModal"
+      tabindex="-1"
+      aria-labelledby="editProductModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editProductModalLabel">
+              កែសម្រួលទំនិញ
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editProductForm">
+              <input type="hidden" id="editProductId" />
+              <div class="mb-3">
+                <label for="editProductName" class="form-label"
+                  >ឈ្មោះទំនិញ</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editProductName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editProductSource" class="form-label">ប្រភព</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editProductSource"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editProductImage" class="form-label">រូបភាព</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="editProductImage"
+                  accept="image/*"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editProductDescription" class="form-label"
+                  >ពិពណ៌នា</label
+                >
+                <textarea
+                  class="form-control"
+                  id="editProductDescription"
+                  rows="4"
+                  required
+                ></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">រក្សាទុក</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <footer>
       <div class="footer-container">
         <div class="footer-logo">
           <h2 class="navbar-brand">ផ្សារកសិករ</h2>
-          <p>" បន្លែស្រស់ ដឹកដល់មាត់ទ្វារផ្ទះរបស់បងប្អូនកម្ពុជា "</p>
+          <p>"បន្លែស្រស់ ដឹកដល់មាត់ទ្វារផ្ទះរបស់បងប្អូនកម្ពុជា"</p>
         </div>
         <div class="footer-links">
           <h4>ទំនាក់ទំនងឆាប់រហ័ស</h4>
@@ -118,11 +586,186 @@
       <div class="phone-number">+855 68 000 000</div>
     </footer>
 
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        // Filter for new products (e.g., IDs > 10 for demonstration)
-        const newProducts = products.filter(p => p.id > 10);
-        renderProducts(newProducts);
+      // Default products
+      const defaultProducts = [
+        {
+          id: 11,
+          name: "ស្ពៃក្តោប",
+          source: "បាត់ដំបង",
+          image: "https://via.placeholder.com/300x200?text=ស្ពៃក្តោប",
+          description: "ស្ពៃក្តោបស្រស់ ដាំដោយកសិករក្នុងស្រុក គ្មានជាតិគីមី។",
+        },
+        {
+          id: 12,
+          name: "ការ៉ុត",
+          source: "កំពង់ធំ",
+          image: "https://via.placeholder.com/300x200?text=ការ៉ុត",
+          description: "ការ៉ុតធម្មជាតិ សម្បូរវីតាមីន A និងមានរសជាតិផ្អែម។",
+        },
+        {
+          id: 13,
+          name: "ត្រសក់",
+          source: "សៀមរាប",
+          image: "https://via.placeholder.com/300x200?text=ត្រសក់",
+          description: "ត្រសក់ស្រស់ ល្អសម្រាប់សាឡាត់ និងអាហារសុខភាព។",
+        },
+      ];
+
+      // Load products from localStorage or use default products
+      let products =
+        JSON.parse(localStorage.getItem("products")) || defaultProducts;
+      localStorage.setItem("products", JSON.stringify(products)); // Ensure default products are stored
+
+      // Function to render products
+      function renderProducts(productList) {
+        const container = document.getElementById("productContainer");
+        container.innerHTML = "";
+        productList.forEach((product) => {
+          const card = `
+            <div class="item-card" data-product-id="${product.id}">
+              <img src="${product.image}" alt="${product.name}">
+              <div class="card-actions">
+                <i class="fas fa-edit" data-product-id="${product.id}" onclick="editProduct(event, ${product.id})"></i>
+                <i class="fas fa-trash" data-product-id="${product.id}" onclick="deleteProduct(event, ${product.id})"></i>
+              </div>
+              <div class="item-card-body">
+                <h5>${product.name}</h5>
+                <p>ប្រភព: ${product.source}</p>
+              </div>
+            </div>
+          `;
+          container.innerHTML += card;
+        });
+
+        // Add click event listeners to cards for detail modal
+        document.querySelectorAll(".item-card").forEach((card) => {
+          card.addEventListener("click", (e) => {
+            if (
+              e.target.classList.contains("fa-edit") ||
+              e.target.classList.contains("fa-trash")
+            )
+              return;
+            const productId = card.getAttribute("data-product-id");
+            const product = products.find((p) => p.id == productId);
+            document.getElementById("productDetailModalLabel").textContent =
+              product.name;
+            document.getElementById("productDetailImage").src = product.image;
+            document.getElementById("productDetailSource").textContent =
+              product.source;
+            document.getElementById("productDetailDescription").textContent =
+              product.description;
+            const detailModal = new bootstrap.Modal(
+              document.getElementById("productDetailModal")
+            );
+            detailModal.show();
+          });
+        });
+      }
+
+      // Search functionality
+      document
+        .getElementById("second-search")
+        .addEventListener("input", (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          const filteredProducts = products.filter(
+            (p) =>
+              p.name.toLowerCase().includes(searchTerm) ||
+              p.source.toLowerCase().includes(searchTerm)
+          );
+          renderProducts(filteredProducts);
+        });
+
+      // Add new product
+      document
+        .getElementById("addProductForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          const fileInput = document.getElementById("productImage");
+          const file = fileInput.files[0];
+          if (!file) return;
+
+          const imageUrl = URL.createObjectURL(file);
+
+          const newProduct = {
+            id: Date.now(), // Unique ID based on timestamp
+            name: document.getElementById("productName").value,
+            source: document.getElementById("productSource").value,
+            image: imageUrl,
+            description: document.getElementById("productDescription").value,
+          };
+          products.push(newProduct);
+          localStorage.setItem("products", JSON.stringify(products));
+          renderProducts(products);
+          document.getElementById("addProductForm").reset();
+          bootstrap.Modal.getInstance(
+            document.getElementById("addProductModal")
+          ).hide();
+        });
+
+      // Edit product
+      window.editProduct = function (event, id) {
+        event.stopPropagation(); // Prevent the card click event from triggering
+        const product = products.find((p) => p.id == id);
+        document.getElementById("editProductId").value = product.id;
+        document.getElementById("editProductName").value = product.name;
+        document.getElementById("editProductSource").value = product.source;
+        document.getElementById("editProductDescription").value =
+          product.description;
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("editProductModal")
+        );
+        modal.show();
+      };
+
+      document
+        .getElementById("editProductForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          const id = parseInt(document.getElementById("editProductId").value);
+          const fileInput = document.getElementById("editProductImage");
+          const file = fileInput.files[0];
+
+          const productIndex = products.findIndex((p) => p.id === id);
+          products[productIndex] = {
+            ...products[productIndex],
+            name: document.getElementById("editProductName").value,
+            source: document.getElementById("editProductSource").value,
+            description: document.getElementById("editProductDescription")
+              .value,
+            image: file
+              ? URL.createObjectURL(file)
+              : products[productIndex].image,
+          };
+
+          localStorage.setItem("products", JSON.stringify(products));
+          renderProducts(products);
+          bootstrap.Modal.getInstance(
+            document.getElementById("editProductModal")
+          ).hide();
+        });
+
+      // Delete product
+      window.deleteProduct = function (event, id) {
+        event.stopPropagation(); // Prevent the card click event from triggering
+        if (confirm("តើអ្នកប្រាកដថាចង់លុបទំនិញនេះមែនទេ?")) {
+          products = products.filter((p) => p.id !== id);
+          localStorage.setItem("products", JSON.stringify(products));
+          renderProducts(products);
+        }
+      };
+
+      // Initial render
+      document.addEventListener("DOMContentLoaded", () => {
+        renderProducts(products);
       });
     </script>
   </body>

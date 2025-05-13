@@ -15,7 +15,6 @@ nav {
 .navbar-brand {
   font-family: "Moul", serif;
   color: #00ca00 !important;
-
 } 
 .active{
   color: #00ca00 !important;
@@ -327,7 +326,6 @@ footer {
   .main {
     font-size: 20px; /* Even smaller font size for small phones */
   }
-
   .text-more {
     font-size: 14px; /* Adjust for smaller text */
   }
