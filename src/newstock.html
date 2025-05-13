@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ទំនិញថ្មីៗ - ផ្សារកសិករ</title>
-
+    <link rel="icon" href="../rice-img/cart.png">
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -22,288 +22,291 @@
     <!-- Link to external styles -->
     <link rel="stylesheet" href="../css/main.css" />
 
-  <style>
-  body {
-    font-family: "Preahvihear", serif;
-    background-color: #f5f7fa;
-    color: #333;
-  }
+    <style>
+      body {
+        font-family: "Preahvihear", serif;
+        background-color: #f5f7fa;
+        color: #333;
+      }
 
-  /* Increase navbar font size for consistency */
-  .main-nav .nav-link {
-    font-size: 1.25rem;
-    color: #666;
-  }
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-  }
-  .navbar-brand {
-    font-family: "Moul", serif;
-    color: #00ca00 !important;
-  }
-  .active {
-    color: #00ca00 !important;
-  }
-  ul {
-    display: flex;
-    gap: 30px;
-    margin-left: 0;
-    list-style-type: none;
-  }
-  ul li a {
-    font-family: "Koulen", sans-serif;
-    text-decoration: none;
-    font-size: 20px;
-  }
-  /* Hamburger Icon */
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 5px;
-  }
-  .hamburger .bar {
-    width: 30px;
-    height: 4px;
-    background-color: #00ca00;
-    border-radius: 5px;
-  }
-  /* Hide the menu on mobile by default */
-  .menu {
-    display: flex;
-    gap: 30px;
-  }
-  .menu li {
-    display: block;
-  }
-  .menu.show {
-    display: flex;
-  }
-  .new-stock-section {
-    padding: 30px 0;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    height: 57vh;
-  }
+      /* Increase navbar font size for consistency */
+      .main-nav .nav-link {
+        font-size: 1.25rem;
+        color: #666;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+      .navbar-brand {
+        font-family: "Moul", serif;
+        color: #00ca00 !important;
+      }
+      .active {
+        color: #00ca00 !important;
+      }
+      ul {
+        display: flex;
+        gap: 30px;
+        margin-left: 0;
+        list-style-type: none;
+      }
+      ul li a {
+        font-family: "Koulen", sans-serif;
+        text-decoration: none;
+        font-size: 20px;
+      }
+      /* Hamburger Icon */
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 5px;
+      }
+      .hamburger .bar {
+        width: 30px;
+        height: 4px;
+        background-color: #00ca00;
+        border-radius: 5px;
+      }
+      /* Hide the menu on mobile by default */
+      .menu {
+        display: flex;
+        gap: 30px;
+      }
+      .menu li {
+        display: block;
+      }
+      .menu.show {
+        display: flex;
+      }
+      .new-stock-section {
+        padding: 30px 0;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        height: auto;
+      }
 
-  .second-main {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-  }
+      .second-main {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
 
-  .second-main h2 {
-    font-family: "Koulen", sans-serif;
-    color: #019801;
-    font-size: 2rem;
-    margin: 0;
-  }
-  .input-search input {
-    padding: 12px;
-    width: 300px;
-    border: 2px solid #ddd;
-    border-radius: 25px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-    outline: none;
-  }
+      .second-main h2 {
+        font-family: "Koulen", sans-serif;
+        color: #019801;
+        font-size: 2rem;
+        margin: 0;
+      }
+      .input-search input {
+        padding: 12px;
+        width: 300px;
+        border: 2px solid #ddd;
+        border-radius: 25px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        outline: none;
+      }
 
-  .input-search input:focus {
-    border-color: #019801;
-    box-shadow: 0 0 5px rgba(1, 152, 1, 0.3);
-  }
+      .input-search input:focus {
+        border-color: #019801;
+        box-shadow: 0 0 5px rgba(1, 152, 1, 0.3);
+      }
 
-  .content-img {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-    justify-content: center;
-  }
+      .content-img {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 20px;
+        justify-content: center;
+      }
 
-  .item-card {
-    background: #ffffff;
-    border-radius: 15px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: 1px solid #e0e0e0;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 30%;
-    max-width: 350px;
-  }
+      .item-card {
+        background: #ffffff;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 1px solid #e0e0e0;
+        position: relative;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 300px; /* Fixed width to match image */
+        max-width: 300px;
+      }
 
-  .item-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    background: #f9f9f9;
-  }
+      .item-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        background: #f9f9f9;
+      }
+      .item-card img {
+        width: 300px;
+        height: 300px;
+        object-fit: contain; /* Ensure entire image is visible */
+        transition: opacity 0.3s;
+        display: block;
+        margin: 0 auto; /* Center the image */
+      }
 
-  .item-card img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    transition: opacity 0.3s;
-  }
+      .item-card:hover img {
+        opacity: 0.9;
+      }
 
-  .item-card:hover img {
-    opacity: 0.9;
-  }
+      .item-card-body {
+        padding: 20px;
+        text-align: center;
+        background: #fff;
+        
+      }
 
-  .item-card-body {
-    padding: 20px;
-    text-align: center;
-    background: #fff;
-  }
+      .item-card-body h5 {
+        font-family: "Koulen", sans-serif;
+        color: #019801;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
 
-  .item-card-body h5 {
-    font-family: "Koulen", sans-serif;
-    color: #019801;
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-  }
+      .item-card-body p {
+        margin: 0;
+        color: #666;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
 
-  .item-card-body p {
-    margin: 0;
-    color: #666;
-    font-size: 1rem;
-    line-height: 1.5;
-  }
+      .card-actions {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        gap: 12px;
+        z-index: 1;
+      }
 
-  .card-actions {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    display: flex;
-    gap: 12px;
-    z-index: 1;
-  }
+      .card-actions i {
+        font-size: 1.4rem;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        transition: transform 0.2s, background 0.2s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-  .card-actions i {
-    font-size: 1.4rem;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    transition: transform 0.2s, background 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+      .card-actions i:hover {
+        transform: scale(1.1);
+        background: #fff;
+      }
 
-  .card-actions i:hover {
-    transform: scale(1.1);
-    background: #fff;
-  }
+      .card-actions .fa-edit {
+        color: #019801;
+      }
 
-  .card-actions .fa-edit {
-    color: #019801;
-  }
+      .card-actions .fa-trash {
+        color: #dc3545;
+      }
 
-  .card-actions .fa-trash {
-    color: #dc3545;
-  }
+      /* Modal Styling */
+      .modal-content {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
 
-  /* Modal Styling */
-  .modal-content {
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  }
+      .modal-header {
+        background: #019801;
+        color: white;
+        border-radius: 15px 15px 0 0;
+      }
 
-  .modal-header {
-    background: #019801;
-    color: white;
-    border-radius: 15px 15px 0 0;
-  }
+      .modal-title {
+        font-family: "Koulen", sans-serif;
+        font-size: 1.5rem;
+      }
 
-  .modal-title {
-    font-family: "Koulen", sans-serif;
-    font-size: 1.5rem;
-  }
+      .modal-body img {
+        width: 300px;
+        height: 300px;
+        object-fit: contain; /* Ensure entire image is visible */
+        border-radius: 10px;
+        margin: 0 auto 20px auto; /* Center the image */
+        display: block;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
 
-  .modal-body img {
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
+      /* Add Product Form */
+      #addProductForm {
+        background: #fff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
 
-  /* Add Product Form */
-  #addProductForm {
-    background: #fff;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
+      #addProductForm .form-label {
+        font-family: "Koulen", sans-serif;
+        color: #019801;
+        font-size: 1.1rem;
+      }
 
-  #addProductForm .form-label {
-    font-family: "Koulen", sans-serif;
-    color: #019801;
-    font-size: 1.1rem;
-  }
+      #addProductForm .form-control {
+        border-radius: 10px;
+        border: 2px solid #ddd;
+        padding: 10px;
+        transition: border-color 0.3s;
+      }
 
-  #addProductForm .form-control {
-    border-radius: 10px;
-    border: 2px solid #ddd;
-    padding: 10px;
-    transition: border-color 0.3s;
-  }
+      #addProductForm .form-control:focus {
+        border-color: #019801;
+        box-shadow: 0 0 5px rgba(1, 152, 1, 0.3);
+      }
 
-  #addProductForm .form-control:focus {
-    border-color: #019801;
-    box-shadow: 0 0 5px rgba(1, 152, 1, 0.3);
-  }
+      #addProductForm .btn {
+        background: orangered;
+        border: none;
+        font-family: "Koulen", sans-serif;
+        padding: 10px 20px;
+        border-radius: 10px;
+        transition: background 0.3s;
+      }
 
-  #addProductForm .btn {
-    background: orangered;
-    border: none;
-    font-family: "Koulen", sans-serif;
-    padding: 10px 20px;
-    border-radius: 10px;
-    transition: background 0.3s;
-  }
+      #addProductForm .btn:hover {
+        background: #ff4500;
+      }
 
-  #addProductForm .btn:hover {
-    background: #ff4500;
-  }
+      @media (max-width: 768px) {
+        .second-main {
+          flex-direction: column;
+          text-align: center;
+        }
 
-  @media (max-width: 768px) {
-    .second-main {
-      flex-direction: column;
-      text-align: center;
-    }
+        .input-search {
+          margin-top: 15px;
+          display: flex;
+          justify-content: center;
+          width: 100%;
+        }
 
-    .input-search {
-      margin-top: 15px;
-      display: flex;
-      justify-content: center;
-      width: 100%;
-    }
+        .input-search input {
+          width: 100%;
+          max-width: 300px;
+        }
 
-    .input-search input {
-      width: 100%;
-      max-width: 300px;
-    }
+        .content-img {
+          padding: 10px;
+        }
 
-    .content-img {
-      padding: 10px;
-    }
-
-    .item-card {
-      width: 100%;
-      max-width: none;
-    }
-  }
-</style>
+        .item-card {
+          width: 300px; /* Maintain fixed width on mobile */
+          max-width: 300px;
+        }
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -600,21 +603,21 @@
           id: 11,
           name: "ស្ពៃក្តោប",
           source: "បាត់ដំបង",
-          image: "https://via.placeholder.com/300x200?text=ស្ពៃក្តោប",
+          image: "https://via.placeholder.com/300x300?text=ស្ពៃក្តោប",
           description: "ស្ពៃក្តោបស្រស់ ដាំដោយកសិករក្នុងស្រុក គ្មានជាតិគីមី។",
         },
         {
           id: 12,
           name: "ការ៉ុត",
           source: "កំពង់ធំ",
-          image: "https://via.placeholder.com/300x200?text=ការ៉ុត",
+          image: "https://via.placeholder.com/300x300?text=ការ៉ុត",
           description: "ការ៉ុតធម្មជាតិ សម្បូរវីតាមីន A និងមានរសជាតិផ្អែម។",
         },
         {
           id: 13,
           name: "ត្រសក់",
           source: "សៀមរាប",
-          image: "https://via.placeholder.com/300x200?text=ត្រសក់",
+          image: "https://via.placeholder.com/300x300?text=ត ­­ផ្សារ",
           description: "ត្រសក់ស្រស់ ល្អសម្រាប់សាឡាត់ និងអាហារសុខភាព។",
         },
       ];
@@ -632,7 +635,7 @@
           const card = `
             <div class="item-card" data-product-id="${product.id}">
               <img src="${product.image}" alt="${product.name}">
-              <div class="card-actions">
+               <div class="card-actions">
                 <i class="fas fa-edit" data-product-id="${product.id}" onclick="editProduct(event, ${product.id})"></i>
                 <i class="fas fa-trash" data-product-id="${product.id}" onclick="deleteProduct(event, ${product.id})"></i>
               </div>
@@ -739,8 +742,7 @@
             ...products[productIndex],
             name: document.getElementById("editProductName").value,
             source: document.getElementById("editProductSource").value,
-            description: document.getElementById("editProductDescription")
-              .value,
+            description: document.getElementById("editProductDescription").value,
             image: file
               ? URL.createObjectURL(file)
               : products[productIndex].image,
